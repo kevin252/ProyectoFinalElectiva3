@@ -1,0 +1,121 @@
+
+<body ng-app="appMasterPage">
+<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+  <script src="bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="bower_components/angular/angular.min.js" type="text/javascript"></script>
+
+      <!--         DEPENDENCIAS ADICIONALES ANGULAR
+               ARCHIVO NECESARIO PARA EL MASTER PAGE
+               PERMITE HACER EL ENRUTAMIENTO DE URL'S -->
+  <script src="bower_components/angular-route/angular-route.min.js" type="text/javascript"></script>
+  <script src="app.js" type="text/javascript"></script>
+  <script src="javascripts/general/usuario/usuarioCtl.js" type="text/javascript"></script>
+  <script src="javascripts/general/usuario/usuarioSer.js" type="text/javascript"></script>
+<div class="container">
+      <div class="row">
+          <div class="col-md-6 col-md-offset-3">
+              <div class="panel panel-login">
+                  <div class="panel-heading">
+
+                      <hr>
+                  </div>
+                  <div class="panel-body">
+                      <div class="row">
+                          <div class="col-lg-12">
+                              <form id="usuario-form" role="form" name="formUsuario"
+                                    ng-controller="CtlUsuario" style="display: block;">
+                                  <div class="form-group">
+                                    <label >Nombres</label>
+                                      <input type="text" name="nombres"
+                                             id="nombres" class="form-control"
+                                             placeholder="Nombres"
+                                             ng-model="usuario.nombres" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label >Apellidos</label>
+                                      <input type="text" name="apellidos"
+                                             id="apellidos"
+                                             class="form-control" placeholder="Apellidos"
+                                             ng-model="usuario.apellidos" required>
+                                  </div>
+                                  <div class="form-group">
+                                  <label for="selPresentacion">Tipo documento</label>
+                                  <div class="col-lg-10">
+                                  <select class="form-control" id="selTipoDocumento" ng-model="usuario.tipoDocumento" ng-options="item.id as item.descripcion for item in tipoDocumentos">
+                                  <option value="" disabled selected>Seleccione una Opcion</option>
+                                  </select>
+                                  </div>
+                                  </div>
+                                  <br>
+                                  <div class="form-group">
+                                    <label >Numero documento</label>
+                                      <input type="text" name="documento"
+                                             id="documento" class="form-control"
+                                             placeholder="Documento"
+                                             ng-model="usuario.documento" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label >Correo</label>
+                                      <input type="mail" name="correo"
+                                             id="correo" class="form-control"
+                                             placeholder="Correo"
+                                             ng-model="usuario.correo" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label >Password</label>
+                                      <input type="password" name="password"
+                                             id="password" class="form-control"
+                                             placeholder="Password"
+                                             ng-model="usuario.password" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label >Repetir password</label>
+                                      <input type="password" name="password1"
+                                             id="password1" class="form-control"
+                                             placeholder="Digite nuevamente el password"
+                                             ng-model="usuario.password1" required>
+                                  </div>
+                                  <div class="form-group">
+
+    <label for="dateFecha" class="col-lg-2 control-label">Fecha de nacimiento</label>
+
+    <div class="form-group">
+        <input type="date" class="form-control" id="fecha"
+        placeholder="Fecha" ng-model="usuario.fecha" required>
+    </div>
+</div>
+
+                                  <div class="form-group">
+    <label for="selPresentacion" class="col-lg-2 control">Tipo Usuario</label>
+
+    <div class="form-group">
+        <select class="form-control" id="selTipoUsuario" ng-model="usuario.tipoUsuario" ng-options="item.id as item.descripcion for item in tipoUsuarios">
+            <option value="" disabled selected>Seleccione una Opcion</option>
+        </select>
+    </div>
+</div>
+
+
+                                  <div class="form-group">
+                                      <div class="row">
+                                          <div class="col-sm-6 col-sm-offset-3">
+                                              <input type="button" name="crear-submit"
+                                                     id="crear-submit"
+                                                     class="form-control btn btn-login"
+                                                     value="Crear" ng-click="crearUsuario(formUsuario.$valid)">
+                                          </div>
+                                      </div>
+                                  </div>
+
+
+                              </form>
+
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</body>

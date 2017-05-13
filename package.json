@@ -9,15 +9,16 @@
     "body-parser": "~1.17.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
-    "express-session": "^1.13.0",
+    "ejs-locals": "^1.0.2",
     "express": "~4.15.2",
+    "express-handlebars": "^3.0.0",
+    "express-session": "^1.13.0",
+    "generator-express-angular": "x.x.x",
+    "generator-karma": "x.x.x",
     "hbs": "~4.0.1",
     "morgan": "~1.8.1",
+    "mysql": "x.x.x",
     "serve-favicon": "~2.4.2",
-    "express-handlebars":"^3.0.0",
-    "mysql":"x.x.x",
-    "generator-karma":"x.x.x",
-    "generator-express-angular":"x.x.x",
-    "yo":"x.x.x"
+    "yo": "x.x.x"
   }
 }

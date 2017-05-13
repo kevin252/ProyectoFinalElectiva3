@@ -1,0 +1,155 @@
+
+
+  <script src="javascripts/general/proyecto/proyectoCtl.js" type="text/javascript"></script>
+  <script src="javascripts/general/proyecto/proyectoSer.js" type="text/javascript"></script>
+<div class="container">
+      <div class="row">
+          <div class="col-md-6 col-md-offset-3">
+              <div class="panel panel-login">
+                  <div class="panel-heading">
+
+
+                  </div>
+                  <div class="panel-body">
+                      <div class="row">
+                          <div class="col-lg-12">
+                              <form id="proyecto-form" role="form" name="formProyecto"
+                                    ng-controller="CtlProyecto" style="display: block;">
+                                    <div class="form-group">
+                                        <input type="text" name="id"
+                                               id="id" class="form-control"
+                                               ng-model="proyecto.id" style="display:none">
+                                    </div>
+                                  <div class="form-group">
+                                    <label >Nombre</label>
+                                      <input type="text" name="nombre"
+                                             id="nombre" class="form-control"
+                                             placeholder="Nombre"
+                                             ng-model="proyecto.nombre" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="dateFecha" class="col-lg-2 control-label">Fecha de Inicio</label>
+                                    <div class="form-group">
+                                        <input type="date" class="form-control" id="fecha"
+                                        placeholder="Fecha inicio" ng-model="proyecto.fecha_inicio" required>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="dateFecha" class="col-lg-2 control-label">Fecha Fin</label>
+                                    <div class="form-group">
+                                        <input type="date" class="form-control" id="fecha"
+                                        placeholder="Fecha Fin" ng-model="proyecto.fecha_fin" required>
+                                    </div>
+                                  </div>
+
+
+                                  <div class="form-group">
+                                    <label for="selDirector" class="col-lg-2 control">Director</label>
+                                    <div class="form-group">
+                                        <select class="form-control" id="selDirector" ng-model="proyecto.director" ng-options="item.id as item.nombre for item in directores">
+                                            <option value="" disabled selected>Seleccione una Opcion</option>
+                                        </select>
+                                    </div>
+                                  </div>
+
+                                  <div class="form-group">
+                                    <label for="selEtapa" class="col-lg-2 control">Etapa</label>
+                                    <div class="form-group">
+                                        <select class="form-control" id="selEtapa" ng-model="proyecto.etapa" ng-options="item.id as item.etapa for item in etapas">
+                                            <option value="" disabled selected>Seleccione una Opcion</option>
+                                        </select>
+                                    </div>
+                                  </div>
+
+
+                                  <div class="form-group">
+                                      <div class="row">
+                                          <div class="col-sm-6 col-sm-offset-3">
+                                              <input type="button" name="crear-submit"
+                                                     id="crear-submit"
+                                                     class="form-control btn btn-login"
+                                                     value="Crear" ng-click="crearProyecto(formProyecto.$valid)">
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  <div class="form-group">
+                                      <div class="row">
+                                          <div class="col-sm-6 col-sm-offset-3">
+                                              <input type="button" name="crear-submit"
+                                                     id="crear-submit"
+                                                     class="form-control btn btn-login"
+                                                     value="Editar" ng-click="editarProyecto(formProyecto.$valid)">
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="panel panel-primary" style="width: 900px;">
+                                    <div class="panel-heading">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="glyphicon glyphicon-search"></i>
+                                            </span>
+                                            <input type="text" class="form-control"
+                                                   placeholder="Buscar Costo" ng-model="txtBuscar">
+                                        </div>
+                                    </div>
+                                  <div class="panel-body">
+                                     <table class="table table-striped">
+                                         <thead>
+                                             <tr>
+                                                 <th>
+                                                     <a ng-click="ordenarPor('id')">Id</a>
+                                                     <a class="caret" ng-click="ordenarPor('-id')"></a>
+                                                 </th>
+                                                 <th>
+                                                     <a ng-click="ordenarPor('nombre')">Nombre</a>
+                                                     <a class="caret" ng-click="ordenarPor('-nombre')"></a>
+                                                 </th>
+                                                 <th>
+                                                     <a ng-click="ordenarPor('fecha_inicio')">Fecha Inicio</a>
+                                                     <a class="caret" ng-click="ordenarPor('-fecha_inicio')"></a>
+                                                 </th>
+                                                 <th>
+                                                     <a ng-click="ordenarPor('fecha_fin')">Fecha fin</a>
+                                                     <a class="caret" ng-click="ordenarPor('-fecha_fin')"></a>
+                                                 </th>
+                                                 <th>
+                                                     <a ng-click="ordenarPor('director')">Director</a>
+                                                     <a class="caret" ng-click="ordenarPor('-director')"></a>
+                                                 </th>
+                                                 <th>
+                                                     <a ng-click="ordenarPor('etapa')">Etapa</a>
+                                                     <a class="caret" ng-click="ordenarPor('-etapa')"></a>
+                                                 </th>
+                                                 <th>
+                                                     <a>Opcion</a>
+                                                 </th>
+                                             </tr>
+                                         </thead>
+                                         <tbody>
+                                             <tr ng-repeat="obj in proyectos| orderBy:ordenarSeleccionado
+                                                         | filter:txtBuscar" ng-click="llenarCampos(obj)">
+                                                 <td ng-bind="obj.id"></td>
+                                                 <td ng-bind="obj.nombre"></td>
+                                                 <td ng-bind="obj.fecha_inicio | date:'shortDate'"></td>
+                                                 <td ng-bind="obj.fecha_fin | date:'shortDate'"></td>
+                                                 <td ng-bind="obj.director"></td>
+                                                 <td ng-bind="obj.etapa"></td>
+
+                                                 <td><input type="button" class="btn btn-default" value="Eliminar"
+                                                            ng-click="eliminarProyecto(obj)"></td>
+                                             </tr>
+                                         </tbody>
+                                     </table>
+                                 </div>
+                               </div>
+
+                              </form>
+
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>

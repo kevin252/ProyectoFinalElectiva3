@@ -23,7 +23,17 @@ app.controller('CtlLogin', function ($scope,$window, loginService) {
         if (form) {
             loginService.login($scope.login).then(function (response) {
                 if (response.length!==0) {
-                  $window.location.href="/inicio";
+                  alert(response[0].id);
+                  if(response[0].tipo_usuario==="1"){
+                    alert("Integrante");
+                    $window.location.href="/inicioIntegrante";
+
+                  }else if(response[0].tipo_usuario==="2"){
+                    alert("directivo");
+                    $window.location.href="/inicio";
+
+                  }
+
                 }else{
                   alert("Los datos ingresados no coinciden");
                 }
@@ -34,13 +44,19 @@ app.controller('CtlLogin', function ($scope,$window, loginService) {
     };
 
     $scope.logOut = function () {
-    
+
             loginService.logOut().then(function (response) {
               $window.location.href="/";
 
             });
 
     };
+
+    $scope.registro = function () {
+      $window.location.href="/registro";
+
+    };
+
 
 
     //  $scope.redireccionar = function (pagina) {
