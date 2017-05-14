@@ -21,19 +21,24 @@ app.controller('CtlCargo', function ($scope, cargoService) {
     /*Se define una funcion en el controlador*/
     $scope.crearCargo = function (form) {
         if (form) {
-              cargoService.crearCargo($scope.cargo).then(function (response) {
-                  console.log(response);
-                  if (response.exito) {
-                      alert("cargo creado con exito");
-                      $scope.cargo = "";
-                      $scope.listar();
-                  } else {
-                      alert("No se pudo crear el cargo");
-                      $scope.cargo = "";
-                      $scope.listar();
+          if($scope.cargo.salario>=0){
+            cargoService.crearCargo($scope.cargo).then(function (response) {
+                console.log(response);
+                if (response.exito) {
+                    alert("cargo creado con exito");
+                    $scope.cargo = "";
+                    $scope.listar();
+                } else {
+                    alert("No se pudo crear el cargo");
+                    $scope.cargo = "";
+                    $scope.listar();
 
-                  }
-              });
+                }
+            });
+          }else{
+            alert("el salario no puede ser menor a 0");
+          }
+
 
 
         } else {

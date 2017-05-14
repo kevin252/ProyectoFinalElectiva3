@@ -44,6 +44,7 @@ router.get('/proyecto', function(req, res, next) {
 });
 router.get('/cargo', function(req, res, next) {
   if(req.session.correo){
+    console.log(req.session.correo);
   res.render('cargo', { title: 'cargo',layout: "masterPage"});
 }else{
   var pagina='<!doctype html><html><head></head><body>'+

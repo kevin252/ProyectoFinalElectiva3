@@ -2,6 +2,7 @@
 var querystring = require('querystring');
 /*Se importa el modulo npm MYSQL*/
 var mysql = require('mysql');
+var id;
 function conectardb() {
 
     //Se hace una conexion a la base de datos
@@ -35,7 +36,12 @@ console.log('llegie');
             var res='[';
             if(filas.length > 0){
               pedido.session.correo=pedido.body.mail;
-              pedido.session.id=filas[0].id;
+              var ide=filas[0].id;
+              console.log(id);
+              pedido.session.ide=ide;
+              id=filas[0].id;
+
+              console.log(filas[0].id);
               for(var i=0;i<filas.length;i++){
                 res+='{';
                 res+='"id":"'+filas[i].id+'",';
@@ -123,7 +129,7 @@ function crearProyecto(pedido,respuesta) {
           nombre: pedido.body.nombre,
           fecha_inicio: fecha_i.toLocaleDateString(),
           fecha_fin: fecha_f.toLocaleDateString(),
-          director: pedido.body.director,
+          director: id,
           etapa: pedido.body.etapa
       };
       console.log(registro);
@@ -278,7 +284,7 @@ function eliminarCargo(pedido, respuesta) {
 
 function listarCargos(pedido,respuesta) {
 
-    var sql = 'select c.id,c.nombre,c.descripcion,c.salario,c.horario,c.proyecto as idProyecto,p.nombre as proyecto from tb_cargos as c join tb_proyectos as p on c.proyecto=p.id';
+    var sql = 'select c.id,c.nombre,c.descripcion,c.salario,c.horario,c.proyecto as idProyecto,p.nombre as proyecto from tb_cargos as c join tb_proyectos as p on c.proyecto=p.id where p.director='+id;
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {
@@ -345,7 +351,8 @@ function listarTipoUsuarios(pedido,respuesta) {
 function listarProyectos(pedido,respuesta) {
 
     var sql = 'select p.id,p.nombre,p.fecha_inicio,p.fecha_fin,p.director as idDirector,u.nombres as director,p.etapa as idEtapa, e.etapa  from tb_proyectos as p '+
-    ' join tb_etapas as e on p.etapa=e.id join tb_usuarios as u on p.director=u.id';
+    ' join tb_etapas as e on p.etapa=e.id join tb_usuarios as u on p.director=u.id where p.director='+id;
+
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {
