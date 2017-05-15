@@ -1,0 +1,159 @@
+<script src="javascripts/general/integrante/integranteCtl.js" type="text/javascript"></script>
+<script src="javascripts/general/integrante/integranteSer.js" type="text/javascript"></script>
+<script src="javascripts/general/proyecto/proyectoSer.js" type="text/javascript"></script>
+<div class="container">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-login">
+				<div class="panel-heading">
+					<h1>Gestión Integrantes</h1>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-lg-12">
+							<form id="integrante-form" role="form" name="formIntegrante"
+							ng-controller="CtlIntegrante" ng-init="listarProyectos();">
+
+							<div class="form-group">
+								<label for="selEtapa" class="col-lg-4 control">Proyecto</label>
+								<div class="form-group">
+									<select class="form-control" id="selEtapa" ng-model="integrante.proyecto" ng-options="item.id as item.nombre for item in proyectos" ng-change="listarIntegrantes();">
+										<option value="" disabled selected>Seleccione una Opcion</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group" ng-show="integrante.proyecto !== undefined">							
+								<div class="input-group">
+									<label for="number" class="col-lg-6 control-label">Buscar Integrante</label>
+									<input type="number" name="cedula" class="form-control" placeholder="Ingrese la Cedula" ng-model="integrante.numDocumento" required>
+									<span class="input-group-btn">
+										<button class="btn btn-secondary" type="button" ng-click="buscarIntegrante(formIntegrante.$valid);" style="margin-top: 25px;">Buscar</button>
+									</span>
+								</div>
+							</div>
+
+							<div id="datosIntegrantes" ng-show="integrante.id !== undefined">
+								<div class="form-group">
+									<label for="tipoDocumento" class="col-lg-4 control">Tipo Documento</label>
+									<input type="text" name="tipoDocumento"
+									id="tipoDocumento" class="form-control"
+									placeholder="Nombre"
+									ng-model="integrante.descripcion" readonly>
+								</div>
+
+								<div class="form-group">
+									<label for="nombre" class="col-lg-4 control-label">Nombres</label>
+									<input type="text" name="nombre"
+									id="nombre" class="form-control"
+									placeholder="Nombre"
+									ng-model="integrante.nombres" readonly>
+								</div>
+
+								<div class="form-group">
+									<label for="apellidos" class="col-lg-4 control-label">Apellidos</label>
+									<input type="text" name="apellidos"
+									id="apellidos" class="form-control"
+									placeholder="Nombre"
+									ng-model="integrante.apellidos" readonly>
+								</div>
+
+								<div class="form-group">
+									<label for="dateFecha" class="col-lg-6 control-label">Fecha de Nacimiento</label>
+									<div class="form-group">
+										<input type="date" class="form-control" id="fecha"
+										placeholder="Fecha inicio" ng-model="integrante.fecha_nacimiento" readonly>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="correo" class="col-lg-2 control-label">Correo</label>
+									<input type="text" name="correo"
+									id="correo" class="form-control"
+									placeholder="Nombre"
+									ng-model="integrante.correo" readonly>
+								</div>
+
+								<div class="form-group">
+									<div class="row">
+										<div class="col-sm-6 col-sm-offset-3">
+											<input type="button" name="crear-submit"
+											id="crear-submit"
+											class="form-control btn btn-login"
+											value="Asignar" ng-click="asignarIntegrante();">
+										</div>
+									</div>
+								</div>
+
+							</div>
+							
+							<div id="integrantesProyecto" ng-if="integrantes.length > 0">
+								<h4>Integrantes</h4>
+								<div class="panel panel-primary" style="width: 1100px;">
+									<div class="panel-heading">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i class="glyphicon glyphicon-search"></i>
+											</span>
+											<input type="text" class="form-control"
+											placeholder="Buscar Integrante" ng-model="txtBuscar">
+										</div>
+									</div>
+									<div class="panel-body">
+										<table class="table table-striped">
+											<thead>
+												<tr>
+													<th>
+														<a ng-click="ordenarPor('descripcion')">Tipo Documento</a>
+														<a class="caret" ng-click="ordenarPor('-descripcion')"></a>
+													</th>
+													<th>
+														<a ng-click="ordenarPor('numDocumento')">Num. Documento</a>
+														<a class="caret" ng-click="ordenarPor('-numDocumento')"></a>
+													</th>
+													<th>
+														<a ng-click="ordenarPor('nombres')">Nombres</a>
+														<a class="caret" ng-click="ordenarPor('-nombres')"></a>
+													</th>
+													<th>
+														<a ng-click="ordenarPor('apellidos')">Apellidos</a>
+														<a class="caret" ng-click="ordenarPor('-apellidos')"></a>
+													</th>
+													<th>
+														<a ng-click="ordenarPor('fechaNacimiento')">Fecha Nacimiento</a>
+														<a class="caret" ng-click="ordenarPor('-fechaNacimiento')"></a>
+													</th>
+													<th>
+														<a ng-click="ordenarPor('correo')">Correo</a>
+														<a class="caret" ng-click="ordenarPor('-correo')"></a>
+													</th>
+													<th>
+														<a>Opcion</a>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="obj in integrantes| orderBy:ordenarSeleccionado
+												| filter:txtBuscar" ng-click="llenarCampos(obj)">
+												<td ng-bind="obj.descripcion"></td>
+												<td ng-bind="obj.numDocumento"></td>
+												<td ng-bind="obj.nombres"></td>
+												<td ng-bind="obj.apellidos"></td>
+												<td ng-bind="obj.fechaNacimiento | date:'shortDate'"></td>					
+												<td ng-bind="obj.correo"></td>
+												<td><input type="button" class="btn btn-default" value="Eliminar"
+													ng-click="eliminarIntegrante(obj)"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>		
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>

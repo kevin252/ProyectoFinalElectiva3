@@ -7,348 +7,348 @@ function conectardb() {
 
     //Se hace una conexion a la base de datos
     conexion = mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'proyecto_electiva'
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'proyecto_electiva'
     });
     //Se conecta a la base de datos
     conexion.connect(function (error) {
-        if (error) {
-            console.log('Problemas de conexion con mysql');
-        } else {
-            console.log('Conexion exitosa');
-        }
+      if (error) {
+        console.log('Problemas de conexion con mysql');
+      } else {
+        console.log('Conexion exitosa');
+      }
     });
-}
+  }
 
-function login(pedido,respuesta) {
-console.log('llegie');
+  function login(pedido,respuesta) {
+    console.log('llegie');
 
-      var sql = "select id,tipo_usuario,correo,password from tb_usuarios where correo='"+pedido.body.mail+"' AND password='"+pedido.body.clave+"'";
-      conexion.query(sql, function (error, filas) {
-          if (error) {
-            console.log("error");
-              console.log('error en la consulta');
-              respuesta.write(null);
-              respuesta.end();
-          }else{
-            var res='[';
-            if(filas.length > 0){
-              pedido.session.correo=pedido.body.mail;
-              var ide=filas[0].id;
-              console.log(id);
-              pedido.session.ide=ide;
-              id=filas[0].id;
+    var sql = "select id,tipo_usuario,correo,password from tb_usuarios where correo='"+pedido.body.mail+"' AND password='"+pedido.body.clave+"'";
+    conexion.query(sql, function (error, filas) {
+      if (error) {
+        console.log("error");
+        console.log('error en la consulta');
+        respuesta.write(null);
+        respuesta.end();
+      }else{
+        var res='[';
+        if(filas.length > 0){
+          pedido.session.correo=pedido.body.mail;
+          var ide=filas[0].id;
+          console.log(id);
+          pedido.session.ide=ide;
+          id=filas[0].id;
 
-              console.log(filas[0].id);
-              for(var i=0;i<filas.length;i++){
-                res+='{';
-                res+='"id":"'+filas[i].id+'",';
-                res+='"tipo_usuario":"'+filas[i].tipo_usuario+'",';
-                res+='"correo":"'+filas[i].correo+'",';
-                res+='"password":"'+filas[i].password+'"},';
-              }
-              res=res.slice(0,-1);
-            }
-            res+=']';
-            console.log(res);
-
-            console.log(pedido.session.id);
-
-
-            respuesta.write(res);
-            /*Se responde*/
-            respuesta.end();
-
+          console.log(filas[0].id);
+          for(var i=0;i<filas.length;i++){
+            res+='{';
+            res+='"id":"'+filas[i].id+'",';
+            res+='"tipo_usuario":"'+filas[i].tipo_usuario+'",';
+            res+='"correo":"'+filas[i].correo+'",';
+            res+='"password":"'+filas[i].password+'"},';
           }
-        });
+          res=res.slice(0,-1);
+        }
+        res+=']';
+        console.log(res);
 
-}
-
-function registro(pedido,respuesta) {
-  var fecha=new Date(pedido.body.fecha);
-
-      var registro = {
-          num_documento: pedido.body.documento,
-          nombres: pedido.body.nombres,
-          apellidos: pedido.body.apellidos,
-          fecha_nacimiento: fecha.toLocaleDateString(),
-          password:pedido.body.password,
-          correo:pedido.body.correo,
-          tipo_usuario:pedido.body.tipoUsuario,
-          tipo_documento:pedido.body.tipoDocumento
+        console.log(pedido.session.id);
 
 
-      };
-      console.log(registro);
-      var sql = 'insert into tb_usuarios set ?';
-      conexion.query(sql, registro, function (error, resultado) {
-          if (error) {
-            console.log("error");
-              console.log('error en la consulta');
-              respuesta.write('{"exito":false}');
-              respuesta.end();
-          }else{
-            respuesta.write('{"exito":true}');
-            respuesta.end();
-          }
-        });
+        respuesta.write(res);
+        /*Se responde*/
+        respuesta.end();
 
-}
+      }
+    });
+
+  }
+
+  function registro(pedido,respuesta) {
+    var fecha=new Date(pedido.body.fecha);
+
+    var registro = {
+      num_documento: pedido.body.documento,
+      nombres: pedido.body.nombres,
+      apellidos: pedido.body.apellidos,
+      fecha_nacimiento: fecha.toLocaleDateString(),
+      password:pedido.body.password,
+      correo:pedido.body.correo,
+      tipo_usuario:pedido.body.tipoUsuario,
+      tipo_documento:pedido.body.tipoDocumento
 
 
-function crearRecurso(pedido,respuesta) {
+    };
+    console.log(registro);
+    var sql = 'insert into tb_usuarios set ?';
+    conexion.query(sql, registro, function (error, resultado) {
+      if (error) {
+        console.log("error");
+        console.log('error en la consulta');
+        respuesta.write('{"exito":false}');
+        respuesta.end();
+      }else{
+        respuesta.write('{"exito":true}');
+        respuesta.end();
+      }
+    });
 
-      var registro = {
-          nombre: pedido.body.nombre,
-          cantidad: pedido.body.cantidad,
-          descripcion: pedido.body.descripcion,
-          ubicacion: pedido.body.ubicacion
-      };
-      console.log(registro);
-      var sql = 'insert into tb_recursos set ?';
-      conexion.query(sql, registro, function (error, resultado) {
-          if (error) {
-            console.log("error");
-              console.log('error en la consulta');
-              respuesta.write('{"exito":false}');
-              respuesta.end();
-          }else{
-            respuesta.write('{"exito":true}');
-            respuesta.end();
-          }
-        });
+  }
 
-}
+
+  function crearRecurso(pedido,respuesta) {
+
+    var registro = {
+      nombre: pedido.body.nombre,
+      cantidad: pedido.body.cantidad,
+      descripcion: pedido.body.descripcion,
+      ubicacion: pedido.body.ubicacion
+    };
+    console.log(registro);
+    var sql = 'insert into tb_recursos set ?';
+    conexion.query(sql, registro, function (error, resultado) {
+      if (error) {
+        console.log("error");
+        console.log('error en la consulta');
+        respuesta.write('{"exito":false}');
+        respuesta.end();
+      }else{
+        respuesta.write('{"exito":true}');
+        respuesta.end();
+      }
+    });
+
+  }
 //Crud proyecto
 function crearProyecto(pedido,respuesta) {
   var fecha_i=new Date(pedido.body.fecha_inicio);
   var fecha_f=new Date(pedido.body.fecha_fin);
-      var registro = {
-          nombre: pedido.body.nombre,
-          fecha_inicio: fecha_i.toLocaleDateString(),
-          fecha_fin: fecha_f.toLocaleDateString(),
-          director: id,
-          etapa: pedido.body.etapa
-      };
-      console.log(registro);
-      var sql = 'insert into tb_proyectos set ?';
-      conexion.query(sql, registro, function (error, resultado) {
-          if (error) {
-            console.log("error");
-              console.log('error en la consulta');
-              respuesta.write('{"exito":false}');
-              respuesta.end();
-          }else{
-            respuesta.write('{"exito":true}');
-            respuesta.end();
-          }
-        });
+  var registro = {
+    nombre: pedido.body.nombre,
+    fecha_inicio: fecha_i.toLocaleDateString(),
+    fecha_fin: fecha_f.toLocaleDateString(),
+    director: id,
+    etapa: pedido.body.etapa
+  };
+  console.log(registro);
+  var sql = 'insert into tb_proyectos set ?';
+  conexion.query(sql, registro, function (error, resultado) {
+    if (error) {
+      console.log("error");
+      console.log('error en la consulta');
+      respuesta.write('{"exito":false}');
+      respuesta.end();
+    }else{
+      respuesta.write('{"exito":true}');
+      respuesta.end();
+    }
+  });
 
 }
 
 function editarProyecto(pedido,respuesta) {
 
-                  var fecha_inicio=new Date(pedido.body.fecha_inicio);
-                  var fecha_fin=new Date(pedido.body.fecha_fin);
+  var fecha_inicio=new Date(pedido.body.fecha_inicio);
+  var fecha_fin=new Date(pedido.body.fecha_fin);
 
-      var sql = "update tb_proyectos set nombre='"+pedido.body.nombre+"', fecha_inicio='"+fecha_inicio.toLocaleDateString()+"', fecha_fin='"+fecha_fin.toLocaleDateString()+
-        "', director="+pedido.body.director+", etapa="+pedido.body.etapa+" where id=?";
-      console.log(sql);
-      conexion.query(sql, pedido.body.id,function (error, resultado) {
-          if (error) {
-            console.log("error");
-              console.log('error en la consulta');
-              respuesta.write('{"exito":"error"}');
-              respuesta.end();
-          }else{
-            console.log(resultado.affectedRows);
-            if(resultado.affectedRows>0){
+  var sql = "update tb_proyectos set nombre='"+pedido.body.nombre+"', fecha_inicio='"+fecha_inicio.toLocaleDateString()+"', fecha_fin='"+fecha_fin.toLocaleDateString()+
+  "', director="+pedido.body.director+", etapa="+pedido.body.etapa+" where id=?";
+  console.log(sql);
+  conexion.query(sql, pedido.body.id,function (error, resultado) {
+    if (error) {
+      console.log("error");
+      console.log('error en la consulta');
+      respuesta.write('{"exito":"error"}');
+      respuesta.end();
+    }else{
+      console.log(resultado.affectedRows);
+      if(resultado.affectedRows>0){
 
-              respuesta.write('{"exito":true}');
-              respuesta.end();
-            }else{
-              respuesta.write('{"exito":false}');
-              respuesta.end();
-            }
+        respuesta.write('{"exito":true}');
+        respuesta.end();
+      }else{
+        respuesta.write('{"exito":false}');
+        respuesta.end();
+      }
 
-          }
-        });
+    }
+  });
 
 }
 
 function eliminarProyecto(pedido, respuesta) {
 
-        var id = pedido.body.id;
-        var sql = 'delete from tb_proyectos  where id=?';
-        conexion.query(sql, id, function (error, resultado) {
-            if (error) {
-                console.log('error en la consulta');
-                console.log(resultado.affectedRows);
-                respuesta.write('{"exito":"error"}');
-                respuesta.end();
-            }else{
-              console.log(resultado.affectedRows);
-              if(resultado.affectedRows>0){
-                respuesta.write('{"exito":true}');
-                respuesta.end();
-              }else{
-                respuesta.write('{"exito":false}');
-                respuesta.end();
-              }
+  var id = pedido.body.id;
+  var sql = 'delete from tb_proyectos  where id=?';
+  conexion.query(sql, id, function (error, resultado) {
+    if (error) {
+      console.log('error en la consulta');
+      console.log(resultado.affectedRows);
+      respuesta.write('{"exito":"error"}');
+      respuesta.end();
+    }else{
+      console.log(resultado.affectedRows);
+      if(resultado.affectedRows>0){
+        respuesta.write('{"exito":true}');
+        respuesta.end();
+      }else{
+        respuesta.write('{"exito":false}');
+        respuesta.end();
+      }
 
-            }
+    }
 
-        });
+  });
 
 }
 //Fin Crud Proyecto
 
 //Crud cargos
 function crearCargo(pedido,respuesta) {
-      var registro = {
-          nombre: pedido.body.nombre,
-          descripcion: pedido.body.descripcion,
-          salario:  pedido.body.salario,
-          horario: pedido.body.horario,
-          proyecto: pedido.body.proyecto
-      };
-      console.log(registro);
-      var sql = 'insert into tb_cargos set ?';
-      conexion.query(sql, registro, function (error, resultado) {
-          if (error) {
-            console.log("error");
-              console.log('error en la consulta');
-              respuesta.write('{"exito":false}');
-              respuesta.end();
-          }else{
-            respuesta.write('{"exito":true}');
-            respuesta.end();
-          }
-        });
+  var registro = {
+    nombre: pedido.body.nombre,
+    descripcion: pedido.body.descripcion,
+    salario:  pedido.body.salario,
+    horario: pedido.body.horario,
+    proyecto: pedido.body.proyecto
+  };
+  console.log(registro);
+  var sql = 'insert into tb_cargos set ?';
+  conexion.query(sql, registro, function (error, resultado) {
+    if (error) {
+      console.log("error");
+      console.log('error en la consulta');
+      respuesta.write('{"exito":false}');
+      respuesta.end();
+    }else{
+      respuesta.write('{"exito":true}');
+      respuesta.end();
+    }
+  });
 
 }
 
 function editarCargo(pedido,respuesta) {
-      var sql = "update tb_cargos set nombre='"+pedido.body.nombre+"', descripcion='"+ pedido.body.descripcion+"', salario="+ pedido.body.salario+
-        ", horario='"+pedido.body.horario+"', proyecto="+pedido.body.proyecto+" where id=?";
-      console.log(sql);
-      conexion.query(sql, pedido.body.id,function (error, resultado) {
-          if (error) {
-            console.log("error");
-              console.log('error en la consulta');
-              respuesta.write('{"exito":"error"}');
-              respuesta.end();
-          }else{
-            console.log(resultado.affectedRows);
-            if(resultado.affectedRows>0){
+  var sql = "update tb_cargos set nombre='"+pedido.body.nombre+"', descripcion='"+ pedido.body.descripcion+"', salario="+ pedido.body.salario+
+  ", horario='"+pedido.body.horario+"', proyecto="+pedido.body.proyecto+" where id=?";
+  console.log(sql);
+  conexion.query(sql, pedido.body.id,function (error, resultado) {
+    if (error) {
+      console.log("error");
+      console.log('error en la consulta');
+      respuesta.write('{"exito":"error"}');
+      respuesta.end();
+    }else{
+      console.log(resultado.affectedRows);
+      if(resultado.affectedRows>0){
 
-              respuesta.write('{"exito":true}');
-              respuesta.end();
-            }else{
-              respuesta.write('{"exito":false}');
-              respuesta.end();
-            }
+        respuesta.write('{"exito":true}');
+        respuesta.end();
+      }else{
+        respuesta.write('{"exito":false}');
+        respuesta.end();
+      }
 
-          }
-        });
+    }
+  });
 
 }
 
 function eliminarCargo(pedido, respuesta) {
 
-        var id = pedido.body.id;
-        var sql = 'delete from tb_cargos  where id=?';
-        conexion.query(sql, id, function (error, resultado) {
-            if (error) {
-                console.log('error en la consulta');
-                console.log(resultado.affectedRows);
-                respuesta.write('{"exito":"error"}');
-                respuesta.end();
-            }else{
-              console.log(resultado.affectedRows);
-              if(resultado.affectedRows>0){
-                respuesta.write('{"exito":true}');
-                respuesta.end();
-              }else{
-                respuesta.write('{"exito":false}');
-                respuesta.end();
-              }
+  var id = pedido.body.id;
+  var sql = 'delete from tb_cargos  where id=?';
+  conexion.query(sql, id, function (error, resultado) {
+    if (error) {
+      console.log('error en la consulta');
+      console.log(resultado.affectedRows);
+      respuesta.write('{"exito":"error"}');
+      respuesta.end();
+    }else{
+      console.log(resultado.affectedRows);
+      if(resultado.affectedRows>0){
+        respuesta.write('{"exito":true}');
+        respuesta.end();
+      }else{
+        respuesta.write('{"exito":false}');
+        respuesta.end();
+      }
 
-            }
+    }
 
-        });
+  });
 
 }
 
 function listarCargos(pedido,respuesta) {
 
-    var sql = 'select c.id,c.nombre,c.descripcion,c.salario,c.horario,c.proyecto as idProyecto,p.nombre as proyecto from tb_cargos as c join tb_proyectos as p on c.proyecto=p.id where p.director='+id;
+  var sql = 'select c.id,c.nombre,c.descripcion,c.salario,c.horario,c.proyecto as idProyecto,p.nombre as proyecto from tb_cargos as c join tb_proyectos as p on c.proyecto=p.id where p.director='+id;
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {
-        if (error) {
-            console.log('error en el listado');
-            respuesta.write(null);
-            respuesta.end();
-            return;
-        }else{
-          var res='[';
-          if(filas.length > 0){
-            for(var i=0;i<filas.length;i++){
-              res+='{';
-              res+='"id":"'+filas[i].id+'",';
-              res+='"nombre":"'+filas[i].nombre+'",';
-              res+='"descripcion":"'+filas[i].descripcion+'",';
-              res+='"salario":"'+filas[i].salario+'",';
-              res+='"horario":"'+filas[i].horario+'",';
-              res+='"idProyecto":"'+filas[i].idProyecto+'",';
-              res+='"proyecto":"'+filas[i].proyecto+'"},';
+      if (error) {
+        console.log('error en el listado');
+        respuesta.write(null);
+        respuesta.end();
+        return;
+      }else{
+        var res='[';
+        if(filas.length > 0){
+          for(var i=0;i<filas.length;i++){
+            res+='{';
+            res+='"id":"'+filas[i].id+'",';
+            res+='"nombre":"'+filas[i].nombre+'",';
+            res+='"descripcion":"'+filas[i].descripcion+'",';
+            res+='"salario":"'+filas[i].salario+'",';
+            res+='"horario":"'+filas[i].horario+'",';
+            res+='"idProyecto":"'+filas[i].idProyecto+'",';
+            res+='"proyecto":"'+filas[i].proyecto+'"},';
 
-            }
-            res=res.slice(0,-1);
           }
-          res+=']';
-          console.log(res);
-          respuesta.write(res);
-          respuesta.end();
+          res=res.slice(0,-1);
         }
+        res+=']';
+        console.log(res);
+        respuesta.write(res);
+        respuesta.end();
+      }
     });
-}
+  }
 
 //Fin Crud cargos
 function listarTipoUsuarios(pedido,respuesta) {
 
-    var sql = 'select id,descripcion from tb_tipos_usuario';
+  var sql = 'select id,descripcion from tb_tipos_usuario';
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {
-        if (error) {
-            console.log('error en el listado');
-            respuesta.write(null);
-            respuesta.end();
-            return;
-        }else{
-          var res='[';
-          if(filas.length > 0){
-            for(var i=0;i<filas.length;i++){
-              res+='{';
-              res+='"id":"'+filas[i].id+'",';
-              res+='"descripcion":"'+filas[i].descripcion+'"},';
+      if (error) {
+        console.log('error en el listado');
+        respuesta.write(null);
+        respuesta.end();
+        return;
+      }else{
+        var res='[';
+        if(filas.length > 0){
+          for(var i=0;i<filas.length;i++){
+            res+='{';
+            res+='"id":"'+filas[i].id+'",';
+            res+='"descripcion":"'+filas[i].descripcion+'"},';
 
-            }
-            res=res.slice(0,-1);
           }
-          res+=']';
-          console.log(res);
-          respuesta.write(res);
-          respuesta.end();
+          res=res.slice(0,-1);
         }
+        res+=']';
+        console.log(res);
+        respuesta.write(res);
+        respuesta.end();
+      }
     });
-}
+  }
 
-function listarProyectos(pedido,respuesta) {
+  function listarProyectos(pedido,respuesta) {
 
     var sql = 'select p.id,p.nombre,p.fecha_inicio,p.fecha_fin,p.director as idDirector,u.nombres as director,p.etapa as idEtapa, e.etapa  from tb_proyectos as p '+
     ' join tb_etapas as e on p.etapa=e.id join tb_usuarios as u on p.director=u.id where p.director='+id;
@@ -357,427 +357,533 @@ function listarProyectos(pedido,respuesta) {
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {
       console.log(filas);
-        if (error) {
-            console.log('error en el listado');
-            respuesta.write(null);
-            respuesta.end();
-            return;
-        }else{
-          var res='[';
-          if(filas.length > 0){
-            for(var i=0;i<filas.length;i++){
-              res+='{';
-              res+='"id":"'+filas[i].id+'",';
-              res+='"nombre":"'+filas[i].nombre+'",';
-              res+='"fecha_inicio":"'+filas[i].fecha_inicio+'",';
-              res+='"fecha_fin":"'+filas[i].fecha_fin+'",';
-              res+='"idDirector":"'+filas[i].idDirector+'",';
-              res+='"director":"'+filas[i].director+'",';
-              res+='"idEtapa":"'+filas[i].idEtapa+'",';
-              res+='"etapa":"'+filas[i].etapa+'"},';
+      if (error) {
+        console.log('error en el listado');
+        respuesta.write(null);
+        respuesta.end();
+        return;
+      }else{
+        var res='[';
+        if(filas.length > 0){
+          for(var i=0;i<filas.length;i++){
+            res+='{';
+            res+='"id":"'+filas[i].id+'",';
+            res+='"nombre":"'+filas[i].nombre+'",';
+            res+='"fecha_inicio":"'+filas[i].fecha_inicio+'",';
+            res+='"fecha_fin":"'+filas[i].fecha_fin+'",';
+            res+='"idDirector":"'+filas[i].idDirector+'",';
+            res+='"director":"'+filas[i].director+'",';
+            res+='"idEtapa":"'+filas[i].idEtapa+'",';
+            res+='"etapa":"'+filas[i].etapa+'"},';
 
-            }
-            res=res.slice(0,-1);
           }
-          res+=']';
-          console.log(res);
-          respuesta.write(res);
-          respuesta.end();
+          res=res.slice(0,-1);
         }
+        res+=']';
+        console.log(res);
+        respuesta.write(res);
+        respuesta.end();
+      }
     });
-}
+  }
 
-function listarDirectores(pedido,respuesta) {
+  function listarIntegrantes(pedido,respuesta) { 
+
+    var sql = 'SELECT u.id, u.num_documento, u.nombres, u.apellidos, u.fecha_nacimiento, u.correo, u.tipo_documento, ' + 
+    'td.descripcion FROM tb_usuarios u JOIN tb_tipos_documento td ON u.tipo_documento = td.id JOIN  ' + 
+    'tb_integrantes_proyectos i ON i.integrante=u.id WHERE i.proyecto = ?';
+    console.log(sql);
+    //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
+    conexion.query(sql, pedido.query.proyecto, function (error, filas) {    
+      if (error) {
+        console.log('error en el listado');
+        respuesta.write(null);
+        respuesta.end();
+        return;
+      }else{
+        var res='[';
+        if(filas.length > 0){
+          for(var i=0;i<filas.length;i++){
+            res+='{';
+            res+='"id":"'+filas[i].id+'",';
+            res+='"descripcion":"'+filas[i].descripcion+'",';
+            res+='"num_documento":"'+filas[i].num_documento+'",';
+            res+='"nombres":"'+filas[i].nombres+'",';
+            res+='"apellidos":"'+filas[i].apellidos+'",';            
+            res+='"fecha_nacimiento":"'+filas[i].fecha_nacimiento+'",';
+            res+='"correo":"'+filas[i].correo+'",';
+            res+='"tipo_documento":"'+filas[i].tipo_documento+'"},';
+          }
+          res=res.slice(0,-1);
+        }
+        res+=']';
+        console.log(res);
+        respuesta.write(res);
+        respuesta.end();
+      }
+    });
+  }
+
+  function buscarIntegrante(pedido,respuesta) { 
+
+    var sql = 'SELECT u.id, u.num_documento, u.nombres, u.apellidos, u.fecha_nacimiento, u.correo, u.tipo_documento, ' + 
+    'td.descripcion FROM tb_usuarios u JOIN tb_tipos_documento td ON u.tipo_documento = td.id WHERE u.tipo_documento = 1' + 
+    ' AND u.num_documento = ?';
+    console.log(sql);
+    //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
+    conexion.query(sql, pedido.query.numDocumento, function (error, filas) {    
+      if (error) {
+        console.log('error en el listado');
+        respuesta.write(null);
+        respuesta.end();
+        return;
+      }else{        
+        res='{';
+        if(filas.length > 0){          
+          res+='"id":"'+filas[0].id+'",';
+          res+='"descripcion":"'+filas[0].descripcion+'",';
+          res+='"num_documento":"'+filas[0].num_documento+'",';
+          res+='"nombres":"'+filas[0].nombres+'",';
+          res+='"apellidos":"'+filas[0].apellidos+'",';            
+          res+='"fecha_nacimiento":"'+filas[0].fecha_nacimiento+'",';
+          res+='"correo":"'+filas[0].correo+'",';
+          res+='"tipo_documento":"'+filas[0].tipo_documento+'"';          
+        }        
+        res+='}';
+        console.log(res);
+        respuesta.write(res);
+        respuesta.end();
+      }
+    });
+  }
+
+  function eliminarIntegrante(pedido, respuesta) {
+    var sql = 'DELETE FROM tb_integrantes_proyectos WHERE integrante = ? AND proyecto = ?';
+    conexion.query(sql, [pedido.body.integrante, pedido.body.proyecto], function (error, resultado) {
+      if (error) {
+        console.log("error");
+        console.log('error en la consulta');
+        respuesta.write('{"exito":false}');
+        respuesta.end();
+      }else{
+        respuesta.write('{"exito":true}');
+        respuesta.end();
+      }
+    });
+
+  }
+
+  function asignarIntegrante(pedido, respuesta) {
+    var registro = {
+      integrante: pedido.body.integrante,
+      proyecto: pedido.body.proyecto
+    }
+    var sql = 'INSERT INTO tb_integrantes_proyectos SET ?';
+    conexion.query(sql, registro, function (error, resultado) {
+      if (error) {
+        console.log("error");
+        console.log('error en la consulta');
+        respuesta.write('{"exito":false}');
+        respuesta.end();
+      }else{
+        respuesta.write('{"exito":true}');
+        respuesta.end();
+      }
+    });
+
+  }
+
+  function listarDirectores(pedido,respuesta) {
 
     var sql = 'select id,nombres from tb_usuarios where tipo_usuario=2';
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {
-        if (error) {
-            console.log('error en el listado');
-            respuesta.write(null);
-            respuesta.end();
-            return;
-        }else{
-          var res='[';
-          if(filas.length > 0){
-            for(var i=0;i<filas.length;i++){
-              res+='{';
-              res+='"id":"'+filas[i].id+'",';
-              res+='"nombre":"'+filas[i].nombres+'"},';
+      if (error) {
+        console.log('error en el listado');
+        respuesta.write(null);
+        respuesta.end();
+        return;
+      }else{
+        var res='[';
+        if(filas.length > 0){
+          for(var i=0;i<filas.length;i++){
+            res+='{';
+            res+='"id":"'+filas[i].id+'",';
+            res+='"nombre":"'+filas[i].nombres+'"},';
 
-            }
-            res=res.slice(0,-1);
           }
-          res+=']';
-          console.log(res);
-          respuesta.write(res);
-          respuesta.end();
+          res=res.slice(0,-1);
         }
+        res+=']';
+        console.log(res);
+        respuesta.write(res);
+        respuesta.end();
+      }
     });
-}
+  }
 
 
-function listarEtapas(pedido,respuesta) {
+  function listarEtapas(pedido,respuesta) {
 
     var sql = 'select id,etapa from tb_etapas ';
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {
-        if (error) {
-            console.log('error en el listado');
-            respuesta.write(null);
-            respuesta.end();
-            return;
-        }else{
-          var res='[';
-          if(filas.length > 0){
-            for(var i=0;i<filas.length;i++){
-              res+='{';
-              res+='"id":"'+filas[i].id+'",';
-              res+='"etapa":"'+filas[i].etapa+'"},';
+      if (error) {
+        console.log('error en el listado');
+        respuesta.write(null);
+        respuesta.end();
+        return;
+      }else{
+        var res='[';
+        if(filas.length > 0){
+          for(var i=0;i<filas.length;i++){
+            res+='{';
+            res+='"id":"'+filas[i].id+'",';
+            res+='"etapa":"'+filas[i].etapa+'"},';
 
-            }
-            res=res.slice(0,-1);
           }
-          res+=']';
-          console.log(res);
-          respuesta.write(res);
-          respuesta.end();
+          res=res.slice(0,-1);
         }
+        res+=']';
+        console.log(res);
+        respuesta.write(res);
+        respuesta.end();
+      }
     });
-}
+  }
 
-function listarTipoDocumentos(pedido,respuesta) {
+  function listarTipoDocumentos(pedido,respuesta) {
 
     var sql = 'select id,descripcion from tb_tipos_documento';
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {
-        if (error) {
-            console.log('error en el listado');
-            respuesta.write(null);
-            respuesta.end();
-            return;
-        }else{
-          var res='[';
-          if(filas.length > 0){
-            for(var i=0;i<filas.length;i++){
-              res+='{';
-              res+='"id":"'+filas[i].id+'",';
-              res+='"descripcion":"'+filas[i].descripcion+'"},';
+      if (error) {
+        console.log('error en el listado');
+        respuesta.write(null);
+        respuesta.end();
+        return;
+      }else{
+        var res='[';
+        if(filas.length > 0){
+          for(var i=0;i<filas.length;i++){
+            res+='{';
+            res+='"id":"'+filas[i].id+'",';
+            res+='"descripcion":"'+filas[i].descripcion+'"},';
 
-            }
-            res=res.slice(0,-1);
           }
-          res+=']';
-          console.log(res);
-          respuesta.write(res);
-          respuesta.end();
+          res=res.slice(0,-1);
         }
+        res+=']';
+        console.log(res);
+        respuesta.write(res);
+        respuesta.end();
+      }
     });
-}
+  }
 
-function crearPresentacion(pedido,respuesta) {
+  function crearPresentacion(pedido,respuesta) {
 
-      var registro = {
-          ml: pedido.body.ml,
-          valor: pedido.body.valor
-      };
-      var sql = 'insert into presentacion set ?';
-      conexion.query(sql, registro, function (error, resultado) {
-          if (error) {
-            console.log("error");
-              console.log('error en la consulta');
-              respuesta.write('{"exito":false}');
-              respuesta.end();
-          }else{
-            respuesta.write('{"exito":true}');
-            respuesta.end();
-          }
-        });
+    var registro = {
+      ml: pedido.body.ml,
+      valor: pedido.body.valor
+    };
+    var sql = 'insert into presentacion set ?';
+    conexion.query(sql, registro, function (error, resultado) {
+      if (error) {
+        console.log("error");
+        console.log('error en la consulta');
+        respuesta.write('{"exito":false}');
+        respuesta.end();
+      }else{
+        respuesta.write('{"exito":true}');
+        respuesta.end();
+      }
+    });
 
-}
+  }
 
-function crearProduccion (pedido,respuesta) {
+  function crearProduccion (pedido,respuesta) {
 
 
-      var fecha=new Date(pedido.body.fecha);
-      var registro = {
-          codigo: pedido.body.codigo,
-          tipo: pedido.body.tipo,
-          presentacion: pedido.body.presentacion,
-          fecha: fecha.toLocaleDateString(),
-          comentarios: pedido.body.descripcion
-      };
-      console.log(registro);
-      var sql = 'insert into produccion set ?';
-      conexion.query(sql, registro, function (error, resultado) {
-          if (error) {
-            console.log("error");
-              console.log('error en la consulta');
-              respuesta.write('{"exito":false}');
-              respuesta.end();
-          }else{
-            respuesta.write('{"exito":true}');
-            respuesta.end();
-          }
-        });
+    var fecha=new Date(pedido.body.fecha);
+    var registro = {
+      codigo: pedido.body.codigo,
+      tipo: pedido.body.tipo,
+      presentacion: pedido.body.presentacion,
+      fecha: fecha.toLocaleDateString(),
+      comentarios: pedido.body.descripcion
+    };
+    console.log(registro);
+    var sql = 'insert into produccion set ?';
+    conexion.query(sql, registro, function (error, resultado) {
+      if (error) {
+        console.log("error");
+        console.log('error en la consulta');
+        respuesta.write('{"exito":false}');
+        respuesta.end();
+      }else{
+        respuesta.write('{"exito":true}');
+        respuesta.end();
+      }
+    });
 
-}
+  }
 
-function listarCervezas(respuesta) {
+  function listarCervezas(respuesta) {
 
     var sql = 'select nombre,descripcion,porcentaje_alcohol from tipocerveza';
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {
-        if (error) {
-            console.log('error en el listado');
-            respuesta.write(null);
-            respuesta.end();
-            return;
-        }else{
-          var res='[';
-          if(filas.length > 0){
-            for(var i=0;i<filas.length;i++){
-              res+='{';
-              res+='"nombre":"'+filas[i].nombre+'",';
-              res+='"descripcion":"'+filas[i].descripcion+'",';
-              res+='"porcentaje_alcohol":"'+filas[i].porcentaje_alcohol+'"},';
-            }
-            res=res.slice(0,-1);
+      if (error) {
+        console.log('error en el listado');
+        respuesta.write(null);
+        respuesta.end();
+        return;
+      }else{
+        var res='[';
+        if(filas.length > 0){
+          for(var i=0;i<filas.length;i++){
+            res+='{';
+            res+='"nombre":"'+filas[i].nombre+'",';
+            res+='"descripcion":"'+filas[i].descripcion+'",';
+            res+='"porcentaje_alcohol":"'+filas[i].porcentaje_alcohol+'"},';
           }
-          res+=']';
-          console.log(res);
-          respuesta.write(res);
-          respuesta.end();
+          res=res.slice(0,-1);
         }
+        res+=']';
+        console.log(res);
+        respuesta.write(res);
+        respuesta.end();
+      }
     });
-}
+  }
 
-function listarPresentaciones(respuesta) {
+  function listarPresentaciones(respuesta) {
 
     var sql = 'select ml,valor from presentacion';
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {
-        if (error) {
-            console.log('error en el listado');
-            respuesta.write(null);
-            respuesta.end();
-            return;
-        }else{
-          var res='[';
-          if(filas.length > 0){
-            for(var i=0;i<filas.length;i++){
-              res+='{';
-              res+='"ml":"'+filas[i].ml+'",';
-              res+='"valor":"'+filas[i].valor+'"},';
+      if (error) {
+        console.log('error en el listado');
+        respuesta.write(null);
+        respuesta.end();
+        return;
+      }else{
+        var res='[';
+        if(filas.length > 0){
+          for(var i=0;i<filas.length;i++){
+            res+='{';
+            res+='"ml":"'+filas[i].ml+'",';
+            res+='"valor":"'+filas[i].valor+'"},';
 
-            }
-            res=res.slice(0,-1);
           }
-          res+=']';
-          console.log(res);
-          respuesta.write(res);
-          respuesta.end();
+          res=res.slice(0,-1);
         }
+        res+=']';
+        console.log(res);
+        respuesta.write(res);
+        respuesta.end();
+      }
     });
-}
+  }
 
-function listarProducciones(respuesta) {
+  function listarProducciones(respuesta) {
 
     var sql = 'select codigo,fecha,comentarios,tipo,presentacion from produccion';
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {
-        if (error) {
-            console.log('error en el listado');
-            respuesta.write(null);
-            respuesta.end();
-            return;
-        }else{
-          var res='[';
-          if(filas.length > 0){
-            for(var i=0;i<filas.length;i++){
-              res+='{';
-              res+='"codigo":"'+filas[i].codigo+'",';
-              res+='"fecha":"'+filas[i].fecha+'",';
-              res+='"descripcion":"'+filas[i].comentarios+'",';
-              res+='"tipo":"'+filas[i].tipo+'",';
-              res+='"presentacion":"'+filas[i].presentacion+'"},';
-            }
-            res=res.slice(0,-1);
+      if (error) {
+        console.log('error en el listado');
+        respuesta.write(null);
+        respuesta.end();
+        return;
+      }else{
+        var res='[';
+        if(filas.length > 0){
+          for(var i=0;i<filas.length;i++){
+            res+='{';
+            res+='"codigo":"'+filas[i].codigo+'",';
+            res+='"fecha":"'+filas[i].fecha+'",';
+            res+='"descripcion":"'+filas[i].comentarios+'",';
+            res+='"tipo":"'+filas[i].tipo+'",';
+            res+='"presentacion":"'+filas[i].presentacion+'"},';
           }
-          res+=']';
-          console.log(res);
-          respuesta.write(res);
+          res=res.slice(0,-1);
+        }
+        res+=']';
+        console.log(res);
+        respuesta.write(res);
+        respuesta.end();
+      }
+    });
+  }
+
+  function editarCerveza(pedido,respuesta) {
+
+
+    var sql = "update tipocerveza  set nombre='"+pedido.body.nombre+"',descripcion='"+pedido.body.descripcion+"',porcentaje_alcohol="+pedido.body.porcentaje_alcohol+" where nombre=?";
+    console.log(sql);
+    conexion.query(sql, pedido.body.nombre,function (error, resultado) {
+      if (error) {
+        console.log("error");
+        console.log('error en la consulta');
+        respuesta.write('{"exito":"error"}');
+        respuesta.end();
+      }else{
+        console.log(resultado.affectedRows);
+        if(resultado.affectedRows>0){
+
+          respuesta.write('{"exito":true}');
+          respuesta.end();
+        }else{
+          respuesta.write('{"exito":false}');
           respuesta.end();
         }
+
+      }
     });
-}
 
-function editarCerveza(pedido,respuesta) {
+  }
 
-
-      var sql = "update tipocerveza  set nombre='"+pedido.body.nombre+"',descripcion='"+pedido.body.descripcion+"',porcentaje_alcohol="+pedido.body.porcentaje_alcohol+" where nombre=?";
-      console.log(sql);
-      conexion.query(sql, pedido.body.nombre,function (error, resultado) {
-          if (error) {
-            console.log("error");
-              console.log('error en la consulta');
-              respuesta.write('{"exito":"error"}');
-              respuesta.end();
-          }else{
-            console.log(resultado.affectedRows);
-            if(resultado.affectedRows>0){
-
-              respuesta.write('{"exito":true}');
-              respuesta.end();
-            }else{
-              respuesta.write('{"exito":false}');
-              respuesta.end();
-            }
-
-          }
-        });
-
-}
-
-function editarPresentacion(pedido,respuesta) {
+  function editarPresentacion(pedido,respuesta) {
 
 
-      var sql = "update presentacion  set ml="+pedido.body.ml+",valor="+pedido.body.valor+" where ml=?";
-      console.log(sql);
-      conexion.query(sql, pedido.body.ml,function (error, resultado) {
-          if (error) {
-            console.log("error");
-              console.log('error en la consulta');
-              respuesta.write('{"exito":"error"}');
-              respuesta.end();
-          }else{
-            console.log(resultado.affectedRows);
-            if(resultado.affectedRows>0){
+    var sql = "update presentacion  set ml="+pedido.body.ml+",valor="+pedido.body.valor+" where ml=?";
+    console.log(sql);
+    conexion.query(sql, pedido.body.ml,function (error, resultado) {
+      if (error) {
+        console.log("error");
+        console.log('error en la consulta');
+        respuesta.write('{"exito":"error"}');
+        respuesta.end();
+      }else{
+        console.log(resultado.affectedRows);
+        if(resultado.affectedRows>0){
 
-              respuesta.write('{"exito":true}');
-              respuesta.end();
-            }else{
-              respuesta.write('{"exito":false}');
-              respuesta.end();
-            }
+          respuesta.write('{"exito":true}');
+          respuesta.end();
+        }else{
+          respuesta.write('{"exito":false}');
+          respuesta.end();
+        }
 
-          }
-        });
+      }
+    });
 
-}
+  }
 
-function editarProduccion(pedido,respuesta) {
+  function editarProduccion(pedido,respuesta) {
 
-                  var fecha=new Date(pedido.body.fecha);
+    var fecha=new Date(pedido.body.fecha);
 
-      var sql = "update produccion  set codigo="+pedido.body.codigo+", fecha='"+fecha.toLocaleDateString()+"', comentarios='"+pedido.body.descripcion+
-        "', tipo='"+pedido.body.tipo+"', presentacion="+pedido.body.presentacion+" where codigo=?";
-      console.log(sql);
-      conexion.query(sql, pedido.body.codigo,function (error, resultado) {
-          if (error) {
-            console.log("error");
-              console.log('error en la consulta');
-              respuesta.write('{"exito":"error"}');
-              respuesta.end();
-          }else{
-            console.log(resultado.affectedRows);
-            if(resultado.affectedRows>0){
+    var sql = "update produccion  set codigo="+pedido.body.codigo+", fecha='"+fecha.toLocaleDateString()+"', comentarios='"+pedido.body.descripcion+
+    "', tipo='"+pedido.body.tipo+"', presentacion="+pedido.body.presentacion+" where codigo=?";
+    console.log(sql);
+    conexion.query(sql, pedido.body.codigo,function (error, resultado) {
+      if (error) {
+        console.log("error");
+        console.log('error en la consulta');
+        respuesta.write('{"exito":"error"}');
+        respuesta.end();
+      }else{
+        console.log(resultado.affectedRows);
+        if(resultado.affectedRows>0){
 
-              respuesta.write('{"exito":true}');
-              respuesta.end();
-            }else{
-              respuesta.write('{"exito":false}');
-              respuesta.end();
-            }
+          respuesta.write('{"exito":true}');
+          respuesta.end();
+        }else{
+          respuesta.write('{"exito":false}');
+          respuesta.end();
+        }
 
-          }
-        });
+      }
+    });
 
-}
+  }
 
-function eliminarCerveza(pedido, respuesta) {
+  function eliminarCerveza(pedido, respuesta) {
 
-        var nombre = pedido.body.nombre;
-        var sql = 'delete from tipocerveza  where nombre=?';
-        conexion.query(sql, nombre, function (error, resultado) {
-            if (error) {
-                console.log('error en la consulta');
-                console.log(resultado.affectedRows);
-                respuesta.write('{"exito":"error"}');
-                respuesta.end();
-            }else{
-              console.log(resultado.affectedRows);
-              if(resultado.affectedRows>0){
-                respuesta.write('{"exito":true}');
-                respuesta.end();
-              }else{
-                respuesta.write('{"exito":false}');
-                respuesta.end();
-              }
+    var nombre = pedido.body.nombre;
+    var sql = 'delete from tipocerveza  where nombre=?';
+    conexion.query(sql, nombre, function (error, resultado) {
+      if (error) {
+        console.log('error en la consulta');
+        console.log(resultado.affectedRows);
+        respuesta.write('{"exito":"error"}');
+        respuesta.end();
+      }else{
+        console.log(resultado.affectedRows);
+        if(resultado.affectedRows>0){
+          respuesta.write('{"exito":true}');
+          respuesta.end();
+        }else{
+          respuesta.write('{"exito":false}');
+          respuesta.end();
+        }
 
-            }
+      }
 
-        });
+    });
 
-}
+  }
 
-function eliminarPresentacion(pedido, respuesta) {
+  function eliminarPresentacion(pedido, respuesta) {
 
-        var ml = pedido.body.ml;
-        var sql = 'delete from presentacion  where ml=?';
-        conexion.query(sql, ml, function (error, resultado) {
-            if (error) {
-                console.log('error en la consulta');
-                console.log(resultado.affectedRows);
-                respuesta.write('{"exito":"error"}');
-                respuesta.end();
-            }else{
-              console.log(resultado.affectedRows);
-              if(resultado.affectedRows>0){
-                respuesta.write('{"exito":true}');
-                respuesta.end();
-              }else{
-                respuesta.write('{"exito":false}');
-                respuesta.end();
-              }
+    var ml = pedido.body.ml;
+    var sql = 'delete from presentacion  where ml=?';
+    conexion.query(sql, ml, function (error, resultado) {
+      if (error) {
+        console.log('error en la consulta');
+        console.log(resultado.affectedRows);
+        respuesta.write('{"exito":"error"}');
+        respuesta.end();
+      }else{
+        console.log(resultado.affectedRows);
+        if(resultado.affectedRows>0){
+          respuesta.write('{"exito":true}');
+          respuesta.end();
+        }else{
+          respuesta.write('{"exito":false}');
+          respuesta.end();
+        }
 
-            }
+      }
 
-        });
+    });
 
-}
+  }
 
-function eliminarProduccion(pedido, respuesta) {
+  function eliminarProduccion(pedido, respuesta) {
 
-        var codigo = pedido.body.codigo;
-        var sql = 'delete from produccion  where codigo=?';
-        conexion.query(sql, codigo, function (error, resultado) {
-            if (error) {
-                console.log('error en la consulta');
-                console.log(resultado.affectedRows);
-                respuesta.write('{"exito":"error"}');
-                respuesta.end();
-            }else{
-              console.log(resultado.affectedRows);
-              if(resultado.affectedRows>0){
-                respuesta.write('{"exito":true}');
-                respuesta.end();
-              }else{
-                respuesta.write('{"exito":false}');
-                respuesta.end();
-              }
+    var codigo = pedido.body.codigo;
+    var sql = 'delete from produccion  where codigo=?';
+    conexion.query(sql, codigo, function (error, resultado) {
+      if (error) {
+        console.log('error en la consulta');
+        console.log(resultado.affectedRows);
+        respuesta.write('{"exito":"error"}');
+        respuesta.end();
+      }else{
+        console.log(resultado.affectedRows);
+        if(resultado.affectedRows>0){
+          respuesta.write('{"exito":true}');
+          respuesta.end();
+        }else{
+          respuesta.write('{"exito":false}');
+          respuesta.end();
+        }
 
-            }
+      }
 
-        });
+    });
 
-}
+  }
 
 //Habilita a las funciones para que sean llamadas o exportadas desde otros archivos
 exports.conectardb = conectardb;
@@ -790,6 +896,10 @@ exports.editarCargo = editarCargo;
 exports.eliminarCargo = eliminarCargo;
 exports.listarCargos=listarCargos;
 exports.listarProyectos=listarProyectos;
+exports.listarIntegrantes=listarIntegrantes;
+exports.buscarIntegrante=buscarIntegrante;
+exports.eliminarIntegrante=eliminarIntegrante;
+exports.asignarIntegrante=asignarIntegrante;
 exports.listarDirectores=listarDirectores;
 exports.listarEtapas=listarEtapas;
 exports.login=login;
