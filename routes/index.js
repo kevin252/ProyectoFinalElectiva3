@@ -42,6 +42,18 @@ router.get('/proyecto', function(req, res, next) {
   res.send(pagina);
 }
 });
+
+router.get('/actividad', function(req, res, next) {
+  if(req.session.correo){
+  res.render('actividad', { title: 'proyecto',layout: "masterPage"});
+}else{
+  var pagina='<!doctype html><html><head></head><body>'+
+           '<p>No tiene permitido ingresar sin login</p>'+
+           '<br><a href="/">Retornar</a></body></html>';
+  res.send(pagina);
+}
+});
+
 router.get('/cargo', function(req, res, next) {
   if(req.session.correo){
     console.log(req.session.correo);
@@ -88,6 +100,12 @@ router.get('/inicioIntegrante', function(req, res, next) {
 router.get('/listarTipoUsuarios', function(req, res, next) {
   dao.listarTipoUsuarios(req,res);
 });
+router.get('/listarActividades', function(req, res, next) {
+  dao.listarActividades(req,res);
+});
+router.get('/listarResponsables', function(req, res, next) {
+  dao.listarResponsables(req,res);
+});
 router.get('/listarDirectores', function(req, res, next) {
   dao.listarDirectores(req,res);
 });
@@ -124,6 +142,14 @@ dao.crearProyecto(req,res);
 
 
 });
+
+router.post('/crearActividad', function(req, res, next) {
+	/*Se crea una variable de sesion llamada mail con el dato que llega*/
+dao.crearActividad(req,res);
+    //req.session.mail=req.body.mail;
+
+
+});
 router.delete('/eliminarProyecto', function(req, res, next) {
 	/*Se crea una variable de sesion llamada mail con el dato que llega*/
 dao.eliminarProyecto(req,res);
@@ -131,9 +157,23 @@ dao.eliminarProyecto(req,res);
 
 
 });
+router.delete('/eliminarActividad', function(req, res, next) {
+	/*Se crea una variable de sesion llamada mail con el dato que llega*/
+dao.eliminarActividad(req,res);
+    //req.session.mail=req.body.mail;
+
+
+});
 router.post('/editarProyecto', function(req, res, next) {
 	/*Se crea una variable de sesion llamada mail con el dato que llega*/
 dao.editarProyecto(req,res);
+    //req.session.mail=req.body.mail;
+
+
+});
+router.post('/editarActividad', function(req, res, next) {
+	/*Se crea una variable de sesion llamada mail con el dato que llega*/
+dao.editarActividad(req,res);
     //req.session.mail=req.body.mail;
 
 
