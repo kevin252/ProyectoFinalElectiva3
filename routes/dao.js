@@ -204,7 +204,157 @@ function eliminarProyecto(pedido, respuesta) {
 
 }
 //Fin Crud Proyecto
+//Crud actividades
+function crearActividad(pedido,respuesta) {
+  var fecha_i=new Date(pedido.body.fecha_inicio);
+  var fecha_f=new Date(pedido.body.fecha_fin);
+      var registro = {
+          nombre: pedido.body.nombre,
+          descripcion: pedido.body.descripcion,
+          fecha_inicio: fecha_i.toLocaleDateString(),
+          fecha_fin: fecha_f.toLocaleDateString(),
+          comentario: pedido.body.comentario,
+          proyecto: pedido.body.proyecto,
+          responsable: pedido.body.responsable
+      };
+      console.log(registro);
+      var sql = 'insert into tb_actividades set ?';
+      conexion.query(sql, registro, function (error, resultado) {
+          if (error) {
+            console.log("error");
+              console.log('error en la consulta');
+              respuesta.write('{"exito":false}');
+              respuesta.end();
+          }else{
+            respuesta.write('{"exito":true}');
+            respuesta.end();
+          }
+        });
 
+}
+
+function editarActividad(pedido,respuesta) {
+      var fecha_inicio=new Date(pedido.body.fecha_inicio);
+      var fecha_fin=new Date(pedido.body.fecha_fin);
+      var sql = "update tb_actividades set nombre='"+pedido.body.nombre+"', fecha_inicio='"+fecha_inicio.toLocaleDateString()+"', fecha_fin='"+fecha_fin.toLocaleDateString()+
+        "', descripcion='"+pedido.body.descripcion+"', comentario='"+pedido.body.comentario+"',proyecto="+pedido.body.proyecto+", responsable="+pedido.body.responsable+" where id=?";
+      console.log(sql);
+      conexion.query(sql, pedido.body.id,function (error, resultado) {
+          if (error) {
+            console.log("error");
+              console.log('error en la consulta');
+              respuesta.write('{"exito":"error"}');
+              respuesta.end();
+          }else{
+            console.log(resultado.affectedRows);
+            if(resultado.affectedRows>0){
+
+              respuesta.write('{"exito":true}');
+              respuesta.end();
+            }else{
+              respuesta.write('{"exito":false}');
+              respuesta.end();
+            }
+
+          }
+        });
+
+}
+
+function eliminarActividad(pedido, respuesta) {
+
+        var id = pedido.body.id;
+        var sql = 'delete from tb_actividades  where id=?';
+        conexion.query(sql, id, function (error, resultado) {
+            if (error) {
+                console.log('error en la consulta');
+                console.log(resultado.affectedRows);
+                respuesta.write('{"exito":"error"}');
+                respuesta.end();
+            }else{
+              console.log(resultado.affectedRows);
+              if(resultado.affectedRows>0){
+                respuesta.write('{"exito":true}');
+                respuesta.end();
+              }else{
+                respuesta.write('{"exito":false}');
+                respuesta.end();
+              }
+
+            }
+
+        });
+
+}
+
+function listarActividades(pedido,respuesta) {
+
+    var sql = 'select a.id,a.nombre,a.descripcion,a.comentario,a.fecha_inicio,a.fecha_fin,a.proyecto as idProyecto,p.nombre as proyecto,u.id as idResponsable,u.nombres as responsable from tb_actividades as a join tb_proyectos as p on a.proyecto=p.id join tb_usuarios as u on a.responsable=u.id where p.director='+id;
+
+    //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
+    conexion.query(sql, function (error, filas) {
+        if (error) {
+            console.log('error en el listado');
+            respuesta.write(null);
+            respuesta.end();
+            return;
+        }else{
+          var res='[';
+          if(filas.length > 0){
+            for(var i=0;i<filas.length;i++){
+              res+='{';
+              res+='"id":"'+filas[i].id+'",';
+              res+='"nombre":"'+filas[i].nombre+'",';
+              res+='"descripcion":"'+filas[i].descripcion+'",';
+              res+='"comentario":"'+filas[i].comentario+'",';
+              res+='"fecha_inicio":"'+filas[i].fecha_inicio+'",';
+              res+='"fecha_fin":"'+filas[i].fecha_fin+'",';
+              res+='"idResponsable":"'+filas[i].idResponsable+'",';
+              res+='"responsable":"'+filas[i].responsable+'",';
+              res+='"idProyecto":"'+filas[i].idProyecto+'",';
+              res+='"proyecto":"'+filas[i].proyecto+'"},';
+
+            }
+            res=res.slice(0,-1);
+          }
+          res+=']';
+          console.log(res);
+          respuesta.write(res);
+          respuesta.end();
+        }
+    });
+}
+
+function listarResponsables(pedido,respuesta) {
+
+    var sql = 'select u.id,u.nombres from tb_integrantes_proyectos as ip join tb_usuarios as u  on u.id=ip.integrante join tb_proyectos as p on ip.proyecto=p.id join tb_tipos_usuario as tp on u.tipo_usuario=tp.id where p.director='+id+' AND u.tipo_usuario=1';
+
+    //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
+    conexion.query(sql, function (error, filas) {
+        if (error) {
+            console.log('error en el listado');
+            respuesta.write(null);
+            respuesta.end();
+            return;
+        }else{
+          var res='[';
+          if(filas.length > 0){
+            for(var i=0;i<filas.length;i++){
+              res+='{';
+              res+='"id":"'+filas[i].id+'",';
+              res+='"nombre":"'+filas[i].nombres+'"},';
+
+            }
+            res=res.slice(0,-1);
+          }
+          res+=']';
+          console.log(res);
+          respuesta.write(res);
+          respuesta.end();
+        }
+    });
+}
+//Fin Crud Actividades
 //Crud cargos
 function crearCargo(pedido,respuesta) {
   var registro = {
@@ -891,6 +1041,11 @@ exports.crearRecurso = crearRecurso;
 exports.crearProyecto = crearProyecto;
 exports.editarProyecto = editarProyecto;
 exports.eliminarProyecto = eliminarProyecto;
+exports.crearActividad = crearActividad;
+exports.editarActividad = editarActividad;
+exports.eliminarActividad = eliminarActividad;
+exports.listarActividades = listarActividades;
+exports.listarResponsables = listarResponsables;
 exports.crearCargo = crearCargo;
 exports.editarCargo = editarCargo;
 exports.eliminarCargo = eliminarCargo;
