@@ -730,6 +730,36 @@ function listarTipoUsuarios(pedido,respuesta) {
     });
   }
 
+   function listarReuniones(pedido,respuesta) {
+
+    var sql = 'SELECT r.id, r.ubicacion, r.tematica FROM tb_reuniones r WHERE r.proyecto = ?';
+
+    //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
+    conexion.query(sql, pedido.query.proyecto, function (error, filas) {
+      if (error) {
+        console.log('error en el listado');
+        respuesta.write(null);
+        respuesta.end();
+        return;
+      }else{
+        var res='[';
+        if(filas.length > 0){
+          for(var i=0;i<filas.length;i++){
+            res+='{';
+            res+='"id":"'+filas[i].id+'",';
+            res+='"ubicacion":"'+filas[i].ubicacion+'",';
+            res+='"tematica":"'+filas[i].tematica+'"},';
+          }
+          res=res.slice(0,-1);
+        }
+        res+=']';
+        console.log(res);
+        respuesta.write(res);
+        respuesta.end();
+      }
+    });
+  }
+
   function buscarIntegrante(pedido,respuesta) {
 
     var sql = 'SELECT u.id, u.num_documento, u.nombres, u.apellidos, u.fecha_nacimiento, u.correo, u.tipo_documento, ' +
@@ -779,6 +809,22 @@ function listarTipoUsuarios(pedido,respuesta) {
 
   }
 
+  function eliminarReunion(pedido, respuesta) {
+    var sql = 'DELETE FROM tb_reuniones WHERE id = ?';
+    conexion.query(sql, pedido.body.reunion, function (error, resultado) {
+      if (error) {
+        console.log("error");
+        console.log('error en la consulta');
+        respuesta.write('{"exito":false}');
+        respuesta.end();
+      }else{
+        respuesta.write('{"exito":true}');
+        respuesta.end();
+      }
+    });
+
+  }
+
   function asignarIntegrante(pedido, respuesta) {
     var registro = {
       integrante: pedido.body.integrante,
@@ -786,6 +832,47 @@ function listarTipoUsuarios(pedido,respuesta) {
     }
     var sql = 'INSERT INTO tb_integrantes_proyectos SET ?';
     conexion.query(sql, registro, function (error, resultado) {
+      if (error) {
+        console.log("error");
+        console.log('error en la consulta');
+        respuesta.write('{"exito":false}');
+        respuesta.end();
+      }else{
+        respuesta.write('{"exito":true}');
+        respuesta.end();
+      }
+    });
+
+  }
+
+  function crearReunion(pedido, respuesta) {
+    var registro = {
+      ubicacion: pedido.body.ubicacion,
+      tematica: pedido.body.tematica,
+      proyecto: pedido.body.proyecto
+    }
+    var sql = 'INSERT INTO tb_reuniones SET ?';
+    conexion.query(sql, registro, function (error, resultado) {
+      if (error) {
+        console.log("error");
+        console.log('error en la consulta');
+        respuesta.write('{"exito":false}');
+        respuesta.end();
+      }else{
+        respuesta.write('{"exito":true}');
+        respuesta.end();
+      }
+    });
+
+  }
+
+  function editarReunion(pedido, respuesta) {
+    var registro = {
+      ubicacion: pedido.body.ubicacion,
+      tematica: pedido.body.tematica
+    }
+    var sql = 'UPDATE tb_reuniones SET ubicacion = ?, tematica = ? WHERE id = ?';
+    conexion.query(sql, [pedido.body.ubicacion, pedido.body.tematica, pedido.body.id], function (error, resultado) {
       if (error) {
         console.log("error");
         console.log('error en la consulta');
@@ -1212,8 +1299,12 @@ exports.eliminarCargo = eliminarCargo;
 exports.listarCargos=listarCargos;
 exports.listarProyectos=listarProyectos;
 exports.listarIntegrantes=listarIntegrantes;
+exports.listarReuniones=listarReuniones;
 exports.buscarIntegrante=buscarIntegrante;
 exports.eliminarIntegrante=eliminarIntegrante;
+exports.eliminarReunion=eliminarReunion;
+exports.crearReunion=crearReunion;
+exports.editarReunion=editarReunion;
 exports.asignarIntegrante=asignarIntegrante;
 exports.listarDirectores=listarDirectores;
 exports.listarEtapas=listarEtapas;
