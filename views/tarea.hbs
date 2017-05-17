@@ -1,82 +1,82 @@
-
-
-  <script src="javascripts/general/actividad/actividadCtl.js" type="text/javascript"></script>
-  <script src="javascripts/general/actividad/actividadSer.js" type="text/javascript"></script>
+  <script src="javascripts/general/tarea/tareaCtl.js" type="text/javascript"></script>
+  <script src="javascripts/general/tarea/tareaSer.js" type="text/javascript"></script>
   <script src="javascripts/general/proyecto/proyectoSer.js" type="text/javascript"></script>
+  <script src="javascripts/general/actividad/actividadSer.js" type="text/javascript"></script>
 
 <div class="container">
       <div class="row">
           <div class="col-md-6">
               <div class="panel panel-login">
                   <div class="panel-heading">
-                    <h1>Gestión Actividades</h1>
-
+                    <h1>Gestion Tareas</h1>
 
                   </div>
                   <div class="panel-body">
                       <div class="row">
                           <div class="col-lg-12">
-                              <form id="actividad-form" role="form" name="formActividad"
-                                    ng-controller="CtlActividad" style="display: block;">
+                              <form id="tarea-form" role="form" name="formTarea"
+                                    ng-controller="CtlTarea" style="display: block;">
                                     <div class="form-group">
                                         <input type="text" name="id"
                                                id="id" class="form-control"
-                                               ng-model="actividad.id" style="display:none">
+                                               ng-model="tarea.id" style="display:none">
                                     </div>
                                   <div class="form-group">
                                     <label >Nombre</label>
                                       <input type="text" name="nombre"
                                              id="nombre" class="form-control"
                                              placeholder="Nombre"
-                                             ng-model="actividad.nombre" required>
+                                             ng-model="tarea.nombre" required>
                                   </div>
                                   <div class="form-group">
-                                    <label >Descripcion</label>
-                                      <input type="text" name="descripcion"
-                                             id="descripcion" class="form-control"
-                                             placeholder="Descripcion"
-                                             ng-model="actividad.descripcion" required>
+                                    <label >Porcentaje</label>
+                                      <input type="number" name="porcentaje"
+                                             id="porcentaje" class="form-control"
+                                             placeholder="Porcentaje"
+                                             ng-model="tarea.porcentaje" required>
                                   </div>
                                   <div class="form-group">
                                     <label for="dateFecha" class="col-lg-2 control-label">Fecha de Inicio</label>
                                     <div class="form-group">
                                         <input type="date" class="form-control" id="fecha"
-                                        placeholder="Fecha inicio" ng-model="actividad.fecha_inicio" required>
+                                        placeholder="Fecha inicio" ng-model="tarea.fecha_inicio" required>
                                     </div>
                                   </div>
                                   <div class="form-group">
                                     <label for="dateFecha" class="col-lg-2 control-label">Fecha Fin</label>
                                     <div class="form-group">
                                         <input type="date" class="form-control" id="fecha"
-                                        placeholder="Fecha Fin" ng-model="actividad.fecha_fin" required>
+                                        placeholder="Fecha Fin" ng-model="tarea.fecha_fin" required>
                                     </div>
                                   </div>
 
                                   <div class="form-group">
-                                    <label >Comentario</label>
-                                      <input type="text" name="comentario"
-                                             id="comentario" class="form-control"
-                                             placeholder="Comentario"
-                                             ng-model="actividad.comentario" required>
+                                    <label >Estado</label>
+                                      <input type="number" name="estado"
+                                             id="estado" class="form-control"
+                                             placeholder="Estado"
+                                             ng-model="tarea.estado" required>
                                   </div>
 
                                   <div class="form-group">
                                     <label for="selProyecto" class="col-lg-2 control">Proyecto</label>
                                     <div class="form-group">
-                                        <select class="form-control" id="selProyecto" ng-model="actividad.proyecto" ng-options="item.id as item.nombre for item in proyectos">
+                                        <select class="form-control" id="selProyecto" ng-model="tarea.proyecto" ng-options="item.id as item.nombre for item in proyectos" ng-change="listarActividades(tarea.proyecto)">
                                             <option value="" disabled selected>Seleccione una Opcion</option>
                                         </select>
                                     </div>
                                   </div>
 
                                   <div class="form-group">
-                                    <label for="selResponsable" class="col-lg-2 control">Responsable</label>
+                                    <label for="selActividad" class="col-lg-2 control">Actividad</label>
                                     <div class="form-group">
-                                        <select class="form-control" id="selResponsable" ng-model="actividad.responsable" ng-options="item.id as item.nombre for item in responsables">
+                                        <select class="form-control" id="selActividad" ng-model="tarea.actividad" ng-options="item.id as item.nombre for item in actividades">
                                             <option value="" disabled selected>Seleccione una Opcion</option>
                                         </select>
                                     </div>
                                   </div>
+
+
 
                                   <div class="form-group">
                                       <div class="row">
@@ -84,7 +84,7 @@
                                               <input type="button" name="crear-submit"
                                                      id="crear-submit"
                                                      class="form-control btn btn-login"
-                                                     value="Crear" ng-click="crearActividad(formActividad.$valid)">
+                                                     value="Crear" ng-click="crearTarea(formTarea.$valid)">
                                           </div>
                                       </div>
                                   </div>
@@ -95,7 +95,7 @@
                                               <input type="button" name="crear-submit"
                                                      id="crear-submit"
                                                      class="form-control btn btn-login"
-                                                     value="Editar" ng-click="editarActividad(formActividad.$valid)">
+                                                     value="Editar" ng-click="editarTarea(formTarea.$valid)">
                                           </div>
                                       </div>
                                   </div>
@@ -122,8 +122,8 @@
                                                      <a class="caret" ng-click="ordenarPor('-nombre')"></a>
                                                  </th>
                                                  <th>
-                                                     <a ng-click="ordenarPor('descripcion')">Descripcion</a>
-                                                     <a class="caret" ng-click="ordenarPor('-descripcion')"></a>
+                                                     <a ng-click="ordenarPor('porcentaje')">Porcentaje</a>
+                                                     <a class="caret" ng-click="ordenarPor('-porcentaje')"></a>
                                                  </th>
                                                  <th>
                                                      <a ng-click="ordenarPor('fecha_inicio')">Fecha Inicio</a>
@@ -134,16 +134,12 @@
                                                      <a class="caret" ng-click="ordenarPor('-fecha_fin')"></a>
                                                  </th>
                                                  <th>
-                                                     <a ng-click="ordenarPor('comentario')">Comentario</a>
-                                                     <a class="caret" ng-click="ordenarPor('-comentario')"></a>
+                                                     <a ng-click="ordenarPor('estado')">Estado</a>
+                                                     <a class="caret" ng-click="ordenarPor('-estado')"></a>
                                                  </th>
                                                  <th>
-                                                     <a ng-click="ordenarPor('proyecto')">Proyecto</a>
-                                                     <a class="caret" ng-click="ordenarPor('-proyecto')"></a>
-                                                 </th>
-                                                 <th>
-                                                     <a ng-click="ordenarPor('responsable')">responsable</a>
-                                                     <a class="caret" ng-click="ordenarPor('-responsable')"></a>
+                                                     <a ng-click="ordenarPor('actividad')">Actividad</a>
+                                                     <a class="caret" ng-click="ordenarPor('-actividad')"></a>
                                                  </th>
                                                  <th>
                                                      <a>Opcion</a>
@@ -151,19 +147,17 @@
                                              </tr>
                                          </thead>
                                          <tbody>
-                                             <tr ng-repeat="obj in actividades| orderBy:ordenarSeleccionado
+                                             <tr ng-repeat="obj in tareas| orderBy:ordenarSeleccionado
                                                          | filter:txtBuscar" ng-click="llenarCampos(obj)">
                                                  <td ng-bind="obj.id"></td>
                                                  <td ng-bind="obj.nombre"></td>
-                                                 <td ng-bind="obj.descripcion"></td>
+                                                 <td ng-bind="obj.porcentaje"></td>
                                                  <td ng-bind="obj.fecha_inicio | date:'shortDate'"></td>
                                                  <td ng-bind="obj.fecha_fin | date:'shortDate'"></td>
-                                                 <td ng-bind="obj.comentario"></td>
-                                                 <td ng-bind="obj.proyecto"></td>
-                                                 <td ng-bind="obj.responsable"></td>
-
+                                                 <td ng-bind="obj.estado"></td>
+                                                 <td ng-bind="obj.actividad"></td>
                                                  <td><input type="button" class="btn btn-default" value="Eliminar"
-                                                            ng-click="eliminarActividad(obj)"></td>
+                                                            ng-click="eliminarTarea(obj)"></td>
                                              </tr>
                                          </tbody>
                                      </table>

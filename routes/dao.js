@@ -324,7 +324,43 @@ function listarActividades(pedido,respuesta) {
         }
     });
 }
+function listarActividadesPorId(pedido,respuesta) {
+console.log(pedido.query.id);
+    var sql = 'select a.id,a.nombre,a.descripcion,a.comentario,a.fecha_inicio,a.fecha_fin,a.proyecto as idProyecto,p.nombre as proyecto,u.id as idResponsable,u.nombres as responsable from tb_actividades as a join tb_proyectos as p on a.proyecto=p.id join tb_usuarios as u on a.responsable=u.id where p.director='+id+' AND p.id='+pedido.query.id;
 
+    //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
+    conexion.query(sql, function (error, filas) {
+        if (error) {
+            console.log('error en el listado');
+            respuesta.write(null);
+            respuesta.end();
+            return;
+        }else{
+          var res='[';
+          if(filas.length > 0){
+            for(var i=0;i<filas.length;i++){
+              res+='{';
+              res+='"id":"'+filas[i].id+'",';
+              res+='"nombre":"'+filas[i].nombre+'",';
+              res+='"descripcion":"'+filas[i].descripcion+'",';
+              res+='"comentario":"'+filas[i].comentario+'",';
+              res+='"fecha_inicio":"'+filas[i].fecha_inicio+'",';
+              res+='"fecha_fin":"'+filas[i].fecha_fin+'",';
+              res+='"idResponsable":"'+filas[i].idResponsable+'",';
+              res+='"responsable":"'+filas[i].responsable+'",';
+              res+='"idProyecto":"'+filas[i].idProyecto+'",';
+              res+='"proyecto":"'+filas[i].proyecto+'"},';
+
+            }
+            res=res.slice(0,-1);
+          }
+          res+=']';
+          console.log(res);
+          respuesta.write(res);
+          respuesta.end();
+        }
+    });
+}
 function listarResponsables(pedido,respuesta) {
 
     var sql = 'select u.id,u.nombres from tb_integrantes_proyectos as ip join tb_usuarios as u  on u.id=ip.integrante join tb_proyectos as p on ip.proyecto=p.id join tb_tipos_usuario as tp on u.tipo_usuario=tp.id where p.director='+id+' AND u.tipo_usuario=1';
@@ -355,6 +391,126 @@ function listarResponsables(pedido,respuesta) {
     });
 }
 //Fin Crud Actividades
+//Crud Tareas
+function crearTarea(pedido,respuesta) {
+  var fecha_i=new Date(pedido.body.fecha_inicio);
+  var fecha_f=new Date(pedido.body.fecha_fin);
+      var registro = {
+          nombre: pedido.body.nombre,
+          porcentaje: pedido.body.porcentaje,
+          fecha_inicio: fecha_i.toLocaleDateString(),
+          fecha_fin: fecha_f.toLocaleDateString(),
+          estado: pedido.body.estado,
+          actividad: pedido.body.actividad
+      };
+      console.log(registro);
+      var sql = 'insert into tb_tareas set ?';
+      conexion.query(sql, registro, function (error, resultado) {
+          if (error) {
+            console.log("error");
+              console.log('error en la consulta');
+              respuesta.write('{"exito":false}');
+              respuesta.end();
+          }else{
+            respuesta.write('{"exito":true}');
+            respuesta.end();
+          }
+        });
+
+}
+
+function editarTarea(pedido,respuesta) {
+      var fecha_inicio=new Date(pedido.body.fecha_inicio);
+      var fecha_fin=new Date(pedido.body.fecha_fin);
+      var sql = "update tb_tareas set nombre='"+pedido.body.nombre+"', fecha_inicio='"+fecha_inicio.toLocaleDateString()+"', fecha_fin='"+fecha_fin.toLocaleDateString()+
+        "', porcentaje="+pedido.body.porcentaje+", estado="+pedido.body.estado+",actividad="+pedido.body.actividad+" where id=?";
+      console.log(sql);
+      conexion.query(sql, pedido.body.id,function (error, resultado) {
+          if (error) {
+            console.log("error");
+              console.log('error en la consulta');
+              respuesta.write('{"exito":"error"}');
+              respuesta.end();
+          }else{
+            console.log(resultado.affectedRows);
+            if(resultado.affectedRows>0){
+
+              respuesta.write('{"exito":true}');
+              respuesta.end();
+            }else{
+              respuesta.write('{"exito":false}');
+              respuesta.end();
+            }
+
+          }
+        });
+
+}
+
+function eliminarTarea(pedido, respuesta) {
+
+        var id = pedido.body.id;
+        var sql = 'delete from tb_tareas  where id=?';
+        conexion.query(sql, id, function (error, resultado) {
+            if (error) {
+                console.log('error en la consulta');
+                console.log(resultado.affectedRows);
+                respuesta.write('{"exito":"error"}');
+                respuesta.end();
+            }else{
+              console.log(resultado.affectedRows);
+              if(resultado.affectedRows>0){
+                respuesta.write('{"exito":true}');
+                respuesta.end();
+              }else{
+                respuesta.write('{"exito":false}');
+                respuesta.end();
+              }
+
+            }
+
+        });
+
+}
+
+function listarTareas(pedido,respuesta) {
+
+    var sql = 'select t.id,t.nombre,t.porcentaje,t.fecha_inicio,t.fecha_fin,t.estado,a.nombre as actividad,a.id as idActividad from tb_tareas as t join tb_actividades as a on t.actividad=a.id join tb_proyectos as p on a.proyecto=p.id where p.director='+id;
+
+    //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
+    conexion.query(sql, function (error, filas) {
+        if (error) {
+            console.log('error en el listado');
+            respuesta.write(null);
+            respuesta.end();
+            return;
+        }else{
+          var res='[';
+          if(filas.length > 0){
+            for(var i=0;i<filas.length;i++){
+              res+='{';
+              res+='"id":"'+filas[i].id+'",';
+              res+='"nombre":"'+filas[i].nombre+'",';
+              res+='"porcentaje":"'+filas[i].porcentaje+'",';
+              res+='"fecha_inicio":"'+filas[i].fecha_inicio+'",';
+              res+='"fecha_fin":"'+filas[i].fecha_fin+'",';
+              res+='"idActividad":"'+filas[i].idActividad+'",';
+              res+='"actividad":"'+filas[i].actividad+'",';
+              res+='"estado":"'+filas[i].estado+'"},';
+
+            }
+            res=res.slice(0,-1);
+          }
+          res+=']';
+          console.log(res);
+          respuesta.write(res);
+          respuesta.end();
+        }
+    });
+}
+
+
+//Fin Crud Tareas
 //Crud cargos
 function crearCargo(pedido,respuesta) {
   var registro = {
@@ -537,14 +693,14 @@ function listarTipoUsuarios(pedido,respuesta) {
     });
   }
 
-  function listarIntegrantes(pedido,respuesta) { 
+  function listarIntegrantes(pedido,respuesta) {
 
-    var sql = 'SELECT u.id, u.num_documento, u.nombres, u.apellidos, u.fecha_nacimiento, u.correo, u.tipo_documento, ' + 
-    'td.descripcion FROM tb_usuarios u JOIN tb_tipos_documento td ON u.tipo_documento = td.id JOIN  ' + 
+    var sql = 'SELECT u.id, u.num_documento, u.nombres, u.apellidos, u.fecha_nacimiento, u.correo, u.tipo_documento, ' +
+    'td.descripcion FROM tb_usuarios u JOIN tb_tipos_documento td ON u.tipo_documento = td.id JOIN  ' +
     'tb_integrantes_proyectos i ON i.integrante=u.id WHERE i.proyecto = ?';
     console.log(sql);
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
-    conexion.query(sql, pedido.query.proyecto, function (error, filas) {    
+    conexion.query(sql, pedido.query.proyecto, function (error, filas) {
       if (error) {
         console.log('error en el listado');
         respuesta.write(null);
@@ -559,7 +715,7 @@ function listarTipoUsuarios(pedido,respuesta) {
             res+='"descripcion":"'+filas[i].descripcion+'",';
             res+='"num_documento":"'+filas[i].num_documento+'",';
             res+='"nombres":"'+filas[i].nombres+'",';
-            res+='"apellidos":"'+filas[i].apellidos+'",';            
+            res+='"apellidos":"'+filas[i].apellidos+'",';
             res+='"fecha_nacimiento":"'+filas[i].fecha_nacimiento+'",';
             res+='"correo":"'+filas[i].correo+'",';
             res+='"tipo_documento":"'+filas[i].tipo_documento+'"},';
@@ -574,31 +730,31 @@ function listarTipoUsuarios(pedido,respuesta) {
     });
   }
 
-  function buscarIntegrante(pedido,respuesta) { 
+  function buscarIntegrante(pedido,respuesta) {
 
-    var sql = 'SELECT u.id, u.num_documento, u.nombres, u.apellidos, u.fecha_nacimiento, u.correo, u.tipo_documento, ' + 
-    'td.descripcion FROM tb_usuarios u JOIN tb_tipos_documento td ON u.tipo_documento = td.id WHERE u.tipo_documento = 1' + 
+    var sql = 'SELECT u.id, u.num_documento, u.nombres, u.apellidos, u.fecha_nacimiento, u.correo, u.tipo_documento, ' +
+    'td.descripcion FROM tb_usuarios u JOIN tb_tipos_documento td ON u.tipo_documento = td.id WHERE u.tipo_documento = 1' +
     ' AND u.num_documento = ?';
     console.log(sql);
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
-    conexion.query(sql, pedido.query.numDocumento, function (error, filas) {    
+    conexion.query(sql, pedido.query.numDocumento, function (error, filas) {
       if (error) {
         console.log('error en el listado');
         respuesta.write(null);
         respuesta.end();
         return;
-      }else{        
+      }else{
         res='{';
-        if(filas.length > 0){          
+        if(filas.length > 0){
           res+='"id":"'+filas[0].id+'",';
           res+='"descripcion":"'+filas[0].descripcion+'",';
           res+='"num_documento":"'+filas[0].num_documento+'",';
           res+='"nombres":"'+filas[0].nombres+'",';
-          res+='"apellidos":"'+filas[0].apellidos+'",';            
+          res+='"apellidos":"'+filas[0].apellidos+'",';
           res+='"fecha_nacimiento":"'+filas[0].fecha_nacimiento+'",';
           res+='"correo":"'+filas[0].correo+'",';
-          res+='"tipo_documento":"'+filas[0].tipo_documento+'"';          
-        }        
+          res+='"tipo_documento":"'+filas[0].tipo_documento+'"';
+        }
         res+='}';
         console.log(res);
         respuesta.write(res);
@@ -1045,6 +1201,10 @@ exports.crearActividad = crearActividad;
 exports.editarActividad = editarActividad;
 exports.eliminarActividad = eliminarActividad;
 exports.listarActividades = listarActividades;
+exports.crearTarea = crearTarea;
+exports.editarTarea = editarTarea;
+exports.eliminarTarea = eliminarTarea;
+exports.listarTareas = listarTareas;
 exports.listarResponsables = listarResponsables;
 exports.crearCargo = crearCargo;
 exports.editarCargo = editarCargo;
@@ -1057,6 +1217,7 @@ exports.eliminarIntegrante=eliminarIntegrante;
 exports.asignarIntegrante=asignarIntegrante;
 exports.listarDirectores=listarDirectores;
 exports.listarEtapas=listarEtapas;
+exports.listarActividadesPorId=listarActividadesPorId;
 exports.login=login;
 exports.registro=registro;
 exports.listarTipoDocumentos=listarTipoDocumentos;

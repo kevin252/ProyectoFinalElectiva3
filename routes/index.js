@@ -10,9 +10,9 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express',layout: false});
 });
 
-router.get('/estudiante', function(req, res, next) {
+router.get('/tarea', function(req, res, next) {
   if(req.session.correo){
-    res.render('estudiante', { title: 'estudiante',layout: "masterPage"});
+    res.render('tarea', { title: 'tarea',layout: "masterPage"});
   }else{
     var pagina='<!doctype html><html><head></head><body>'+
     '<p>No tiene permitido ingresar sin login</p>'+
@@ -123,6 +123,9 @@ router.get('/listarDirectores', function(req, res, next) {
 router.get('/listarEtapas', function(req, res, next) {
   dao.listarEtapas(req,res);
 });
+router.get('/listarTareas', function(req, res, next) {
+  dao.listarTareas(req,res);
+});
 router.get('/listarProyectos', function(req, res, next) {
   dao.listarProyectos(req,res);
 });
@@ -134,6 +137,9 @@ router.get('/listarCargos', function(req, res, next) {
 });
 router.get('/listarTipoDocumentos', function(req, res, next) {
   dao.listarTipoDocumentos(req,res);
+});
+router.get('/listarActividadesPorId', function(req, res, next) {
+  dao.listarActividadesPorId(req,res);
 });
 
 router.get('/buscarIntegrante', function(req, res, next) {
@@ -151,6 +157,11 @@ router.post('/crearUsuario', function(req, res, next) {
  dao.registro(req,res);
     //req.session.mail=req.body.mail;
   });
+  router.post('/crearTarea', function(req, res, next) {
+   /*Se crea una variable de sesion llamada mail con el dato que llega*/
+   dao.crearTarea(req,res);
+      //req.session.mail=req.body.mail;
+    });
 
 router.post('/crearProyecto', function(req, res, next) {
  /*Se crea una variable de sesion llamada mail con el dato que llega*/
@@ -167,7 +178,7 @@ router.post('/crearActividad', function(req, res, next) {
 router.delete('/eliminarProyecto', function(req, res, next) {
 	/*Se crea una variable de sesion llamada mail con el dato que llega*/
   dao.eliminarProyecto(req,res);
-    //req.session.mail=req.body.mail;    
+    //req.session.mail=req.body.mail;
   });
 
 router.delete('/eliminarActividad', function(req, res, next) {
@@ -175,6 +186,11 @@ router.delete('/eliminarActividad', function(req, res, next) {
   dao.eliminarActividad(req,res);
     //req.session.mail=req.body.mail;
   });
+  router.delete('/eliminarTarea', function(req, res, next) {
+  	/*Se crea una variable de sesion llamada mail con el dato que llega*/
+    dao.eliminarTarea(req,res);
+      //req.session.mail=req.body.mail;
+    });
 
 router.post('/editarProyecto', function(req, res, next) {
 	/*Se crea una variable de sesion llamada mail con el dato que llega*/
@@ -188,6 +204,11 @@ router.post('/editarActividad', function(req, res, next) {
     //req.session.mail=req.body.mail;
   });
 
+  router.post('/editarTarea', function(req, res, next) {
+  	/*Se crea una variable de sesion llamada mail con el dato que llega*/
+    dao.editarTarea(req,res);
+      //req.session.mail=req.body.mail;
+    });
 router.post('/crearCargo', function(req, res, next) {
 	/*Se crea una variable de sesion llamada mail con el dato que llega*/
   dao.crearCargo(req,res);

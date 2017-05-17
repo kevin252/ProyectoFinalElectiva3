@@ -21,19 +21,18 @@
  * datos diferente a como se hacia en jquery  y muchos webservices no encuentran
  * los datos que les llega, por lo que se hace necesario serializarlos como
  * jquery para que lleguen al servidor*/
-app.service('actividadService', function ($http, $httpParamSerializerJQLike) {
-    this.crearActividad = function (actividad) {
+app.service('tareaService', function ($http, $httpParamSerializerJQLike) {
+    this.crearTarea = function (tarea) {
         var promise = $http({
             method: "POST",
-            url: "/crearActividad",
+            url: "/crearTarea",
             data: $httpParamSerializerJQLike({
-                nombre: actividad.nombre,
-                descripcion: actividad.descripcion,
-                fecha_inicio:actividad.fecha_inicio,
-                fecha_fin:actividad.fecha_fin,
-                comentario: actividad.comentario,
-                proyecto:actividad.proyecto,
-                responsable: actividad.responsable}),
+                nombre: tarea.nombre,
+                porcentaje: tarea.porcentaje,
+                fecha_inicio:tarea.fecha_inicio,
+                fecha_fin:tarea.fecha_fin,
+                estado: tarea.estado,
+                actividad: tarea.actividad}),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
             return response.data;
@@ -44,19 +43,18 @@ app.service('actividadService', function ($http, $httpParamSerializerJQLike) {
         return promise;
     };
 
-    this.editarActividad = function (actividad) {
+    this.editarTarea = function (tarea) {
         var promise = $http({
             method: "post",
-            url: "/editarActividad",
+            url: "/editarTarea",
             data: $httpParamSerializerJQLike({
-              id:actividad.id,
-              nombre: actividad.nombre,
-              descripcion: actividad.descripcion,
-              fecha_inicio:actividad.fecha_inicio,
-              fecha_fin:actividad.fecha_fin,
-              comentario: actividad.comentario,
-              proyecto:actividad.proyecto,
-              responsable: actividad.responsable}),
+              id:tarea.id,
+              nombre: tarea.nombre,
+              porcentaje: tarea.porcentaje,
+              fecha_inicio:tarea.fecha_inicio,
+              fecha_fin:tarea.fecha_fin,
+              estado: tarea.estado,
+              actividad: tarea.actividad}),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
             return response.data;
@@ -66,20 +64,6 @@ app.service('actividadService', function ($http, $httpParamSerializerJQLike) {
         });
         return promise;
     };
-
-    this.listarProyectos = function () {
-        var promise = $http({
-            method: "get",
-            url: "/listarProyectos"
-        }).then(function mySucces(response) {
-            return response.data;
-        }, function myError(response) {
-            alert("Error");
-            alert(response.statusText);
-        });
-        return promise;
-    };
-
 
 
     this.listarActividades = function () {
@@ -94,27 +78,10 @@ app.service('actividadService', function ($http, $httpParamSerializerJQLike) {
         });
         return promise;
     };
-    this.listarActividadesPorId = function (id) {
-      console.log(id);
-
+    this.listarTareas = function () {
         var promise = $http({
             method: "get",
-            url: "/listarActividadesPorId",
-            params: {
-                id: id
-            }
-        }).then(function mySucces(response) {
-            return response.data;
-        }, function myError(response) {
-            alert("Error");
-            alert(response.statusText);
-        });
-        return promise;
-    };
-    this.listarResponsables = function () {
-        var promise = $http({
-            method: "get",
-            url: "/listarResponsables"
+            url: "/listarTareas"
         }).then(function mySucces(response) {
             return response.data;
         }, function myError(response) {
@@ -124,12 +91,12 @@ app.service('actividadService', function ($http, $httpParamSerializerJQLike) {
         return promise;
     };
 
-    this.eliminarActividad = function (actividad) {
+    this.eliminarTarea = function (tarea) {
         var promise = $http({
             method: "delete",
-            url: "/eliminarActividad",
+            url: "/eliminarTarea",
             data: $httpParamSerializerJQLike({
-                id: actividad.id}),
+                id: tarea.id}),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
             return response.data;

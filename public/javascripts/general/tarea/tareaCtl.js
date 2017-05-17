@@ -12,28 +12,28 @@
 /*app.controller(nombre de la funcion)  ($scope, nombre de los servicios a utilizar)*/
 /*$windows servicio por defecto para poder utilizar refresco de pagina y redireccionamiento*/
 /*logInService, nombre del servicio que contiene la promesa. */
-app.controller('CtlActividad', function ($scope,proyectoService, actividadService) {
+app.controller('CtlTarea', function ($scope,proyectoService,actividadService, tareaService) {
 
     /*Se inicializa el modelo*/
-    $scope.actividad = "";
-    $scope.actividades = [];
+    $scope.tarea = "";
+    $scope.tareas = [];
 
     /*Se define una funcion en el controlador*/
-    $scope.crearActividad = function (form) {
+    $scope.crearTarea = function (form) {
         if (form) {
-          var i = new Date($scope.actividad.fecha_inicio);
-          var f = new Date($scope.actividad.fecha_fin);
+          var i = new Date($scope.tarea.fecha_inicio);
+          var f = new Date($scope.tarea.fecha_fin);
           var a= new Date();
           if(i>=a&i<=f){
-            actividadService.crearActividad($scope.actividad).then(function (response) {
+            tareaService.crearTarea($scope.tarea).then(function (response) {
                 console.log(response);
                 if (response.exito) {
-                    alert("Actividad creada con exito");
-                    $scope.actividad = "";
+                    alert("Tarea creada con exito");
+                    $scope.tarea = "";
                     $scope.listar();
                 } else {
-                    alert("No se pudo crear la actividad");
-                    $scope.actividad = "";
+                    alert("No se pudo crear la tarea");
+                    $scope.tarea = "";
                     $scope.listar();
 
                 }
@@ -47,45 +47,45 @@ app.controller('CtlActividad', function ($scope,proyectoService, actividadServic
             $scope.listar();
         }
     };
-    $scope.eliminarActividad = function (actividad) {
-        actividadService.eliminarActividad(actividad).then(function (response) {
+    $scope.eliminarTarea = function (tarea) {
+        tareaService.eliminarTarea(tarea).then(function (response) {
             if (response.exito) {
-                $scope.actividad = "";
+                $scope.tarea = "";
                 $scope.listar();
                 alert("Se elimino con exito");
             } else if (response.exito === false) {
-                $scope.actividad = "";
+                $scope.tarea = "";
                 alert("No se elimino ninguna fila");
                 $scope.listar();
 
             } else {
-                $scope.actividad = "";
-                alert("Error al tratar de eliminar la actividad");
+                $scope.tarea = "";
+                alert("Error al tratar de eliminar la tarea");
                 $scope.listar();
 
             }
         });
     };
 
-    $scope.editarActividad = function (form) {
+    $scope.editarTarea = function (form) {
         if (form) {
-          var i = new Date($scope.actividad.fecha_inicio);
-          var f = new Date($scope.actividad.fecha_fin);
+          var i = new Date($scope.tarea.fecha_inicio);
+          var f = new Date($scope.tarea.fecha_fin);
           var a= new Date();
           if(i>=a&i<=f){
-            actividadService.editarActividad($scope.actividad).then(function (response) {
+            tareaService.editarTarea($scope.tarea).then(function (response) {
                 if (response.exito===true) {
-                    $scope.actividad = "";
+                    $scope.tarea = "";
                     $scope.listar();
                     alert("Se edito con exito");
                 } else if (response.exito === false) {
-                    $scope.actividad = "";
+                    $scope.tarea = "";
                     alert("No se edito ninguna fila");
                     $scope.listar();
 
                 } else {
-                    $scope.actividad = "";
-                    alert("Error al tratar de editar la actividad");
+                    $scope.tarea = "";
+                    alert("Error al tratar de editar la tarea");
                     $scope.listar();
 
                 }
@@ -102,6 +102,38 @@ app.controller('CtlActividad', function ($scope,proyectoService, actividadServic
 
     };
 
+
+    $scope.listarActividades = function (id) {
+        actividadService.listarActividadesPorId(id).then(function (response) {
+            $scope.actividades = [];
+            console.log(response[0]);
+            if (response.length !== 0) {
+                $scope.actividades.length = 0;
+                for (var i = 0; i < response.length; i++) {
+                    $scope.actividades.push({id: response[i].id,nombre: response[i].nombre
+                    });
+                }
+            }
+        });
+    };
+
+    $scope.listar = function () {
+        tareaService.listarTareas().then(function (response) {
+            $scope.tareas = [];
+            console.log(response[0]);
+            if (response.length !== 0) {
+                $scope.tareas.length = 0;
+                for (var i = 0; i < response.length; i++) {
+                    $scope.tareas.push({id: response[i].id,nombre: response[i].nombre,
+                      porcentaje: response[i].porcentaje,fecha_inicio:
+                      new Date(response[i].fecha_inicio), fecha_fin: new Date(response[i].fecha_fin),
+                      estado: response[i].estado,actividad: response[i].actividad,
+                      idActividad: response[i].idActividad
+                    });
+                }
+            }
+        });
+    };
     $scope.listarProyectos = function () {
         proyectoService.listarProyectos().then(function (response) {
             $scope.proyectos = [];
@@ -115,38 +147,6 @@ app.controller('CtlActividad', function ($scope,proyectoService, actividadServic
             }
         });
     };
-    $scope.listarResponsables = function () {
-        actividadService.listarResponsables().then(function (response) {
-            $scope.responsables = [];
-            console.log(response[0]);
-            if (response.length !== 0) {
-                $scope.responsables.length = 0;
-                for (var i = 0; i < response.length; i++) {
-                    $scope.responsables.push({id: response[i].id,nombre: response[i].nombre
-                    });
-                }
-            }
-        });
-    };
-
-    $scope.listar = function () {
-        actividadService.listarActividades().then(function (response) {
-            $scope.actividades = [];
-            console.log(response[0]);
-            if (response.length !== 0) {
-                $scope.actividades.length = 0;
-                for (var i = 0; i < response.length; i++) {
-                    $scope.actividades.push({id: response[i].id,nombre: response[i].nombre,
-                      descripcion: response[i].descripcion,fecha_inicio:
-                      new Date(response[i].fecha_inicio), fecha_fin: new Date(response[i].fecha_fin),
-                      comentario: response[i].comentario,proyecto: response[i].proyecto,
-                      idProyecto: response[i].idProyecto,responsable: response[i].responsable,
-                      idResponsable: response[i].idResponsable
-                    });
-                }
-            }
-        });
-    };
 
 
 
@@ -154,9 +154,10 @@ app.controller('CtlActividad', function ($scope,proyectoService, actividadServic
     $scope.llenarCampos = function (obj) {
       obj.fecha_inicio = new Date(obj.fecha_inicio);
       obj.fecha_fin = new Date(obj.fecha_fin);
-        $scope.actividad = obj;
-        $scope.actividad.proyecto=obj.idProyecto;
-        $scope.actividad.responsable=obj.idResponsable;
+      obj.porcentaje=parseInt(obj.porcentaje);
+      obj.estado=parseInt(obj.estado);
+        $scope.tarea = obj;
+        $scope.tarea.actividad=obj.idActividad;
 
 
 
@@ -165,9 +166,7 @@ app.controller('CtlActividad', function ($scope,proyectoService, actividadServic
     $scope.ordenarPor = function (tipo) {
         $scope.ordenarSeleccionado = tipo;
     };
-
     $scope.listarProyectos();
-    $scope.listarResponsables();
     $scope.listar();
 
 });
