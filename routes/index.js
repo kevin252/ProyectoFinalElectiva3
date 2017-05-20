@@ -42,6 +42,16 @@ router.get('/proyecto', function(req, res, next) {
     res.send(pagina);
   }
 });
+router.get('/estado', function(req, res, next) {
+  if(req.session.correo){
+    res.render('estado', { title: 'estado',layout: "masterPage"});
+  }else{
+    var pagina='<!doctype html><html><head></head><body>'+
+    '<p>No tiene permitido ingresar sin login</p>'+
+    '<br><a href="/">Retornar</a></body></html>';
+    res.send(pagina);
+  }
+});
 
 router.get('/integrantes', function(req, res, next) {
   if(req.session.correo){
@@ -137,8 +147,17 @@ router.get('/listarEtapas', function(req, res, next) {
 router.get('/listarTareas', function(req, res, next) {
   dao.listarTareas(req,res);
 });
+router.get('/listarTareasPorProyecto', function(req, res, next) {
+  dao.listarTareasPorProyecto(req,res);
+});
+router.get('/listarTareasPorActividad', function(req, res, next) {
+  dao.listarTareasPorActividad(req,res);
+});
 router.get('/listarProyectos', function(req, res, next) {
   dao.listarProyectos(req,res);
+});
+router.get('/listarProyectosPorId', function(req, res, next) {
+  dao.listarProyectosPorId(req,res);
 });
 router.get('/listarIntegrantes', function(req, res, next) {
   dao.listarIntegrantes(req,res);

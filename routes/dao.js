@@ -475,7 +475,81 @@ function eliminarTarea(pedido, respuesta) {
 
 function listarTareas(pedido,respuesta) {
 
-    var sql = 'select t.id,t.nombre,t.porcentaje,t.fecha_inicio,t.fecha_fin,t.estado,a.nombre as actividad,a.id as idActividad from tb_tareas as t join tb_actividades as a on t.actividad=a.id join tb_proyectos as p on a.proyecto=p.id where p.director='+id;
+    var sql = 'select t.id,t.nombre,t.porcentaje,t.fecha_inicio,t.fecha_fin,t.estado,a.nombre as actividad,a.id as idActividad,p.id as idProyecto from tb_tareas as t join tb_actividades as a on t.actividad=a.id join tb_proyectos as p on a.proyecto=p.id where p.director='+id;
+
+    //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
+    conexion.query(sql, function (error, filas) {
+        if (error) {
+            console.log('error en el listado');
+            respuesta.write(null);
+            respuesta.end();
+            return;
+        }else{
+          var res='[';
+          if(filas.length > 0){
+            for(var i=0;i<filas.length;i++){
+              res+='{';
+              res+='"id":"'+filas[i].id+'",';
+              res+='"nombre":"'+filas[i].nombre+'",';
+              res+='"porcentaje":"'+filas[i].porcentaje+'",';
+              res+='"fecha_inicio":"'+filas[i].fecha_inicio+'",';
+              res+='"fecha_fin":"'+filas[i].fecha_fin+'",';
+              res+='"idActividad":"'+filas[i].idActividad+'",';
+              res+='"actividad":"'+filas[i].actividad+'",';
+              res+='"idProyecto":"'+filas[i].idProyecto+'",';
+
+              res+='"estado":"'+filas[i].estado+'"},';
+
+            }
+            res=res.slice(0,-1);
+          }
+          res+=']';
+          console.log(res);
+          respuesta.write(res);
+          respuesta.end();
+        }
+    });
+}
+
+function listarTareasPorProyecto(pedido,respuesta) {
+
+    var sql = 'select t.id,t.nombre,t.porcentaje,t.fecha_inicio,t.fecha_fin,t.estado,a.nombre as actividad,a.id as idActividad from tb_tareas as t join tb_actividades as a on t.actividad=a.id join tb_proyectos as p on a.proyecto=p.id where p.id='+pedido.query.id;
+
+    //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
+    conexion.query(sql, function (error, filas) {
+        if (error) {
+            console.log('error en el listado');
+            respuesta.write(null);
+            respuesta.end();
+            return;
+        }else{
+          var res='[';
+          if(filas.length > 0){
+            for(var i=0;i<filas.length;i++){
+              res+='{';
+              res+='"id":"'+filas[i].id+'",';
+              res+='"nombre":"'+filas[i].nombre+'",';
+              res+='"porcentaje":"'+filas[i].porcentaje+'",';
+              res+='"fecha_inicio":"'+filas[i].fecha_inicio+'",';
+              res+='"fecha_fin":"'+filas[i].fecha_fin+'",';
+              res+='"idActividad":"'+filas[i].idActividad+'",';
+              res+='"actividad":"'+filas[i].actividad+'",';
+              res+='"estado":"'+filas[i].estado+'"},';
+
+            }
+            res=res.slice(0,-1);
+          }
+          res+=']';
+          console.log(res);
+          respuesta.write(res);
+          respuesta.end();
+        }
+    });
+}
+
+function listarTareasPorActividad(pedido,respuesta) {
+
+    var sql = 'select t.id,t.nombre,t.porcentaje,t.fecha_inicio,t.fecha_fin,t.estado,a.nombre as actividad,a.id as idActividad from tb_tareas as t join tb_actividades as a on t.actividad=a.id join tb_proyectos as p on a.proyecto=p.id where a.id='+pedido.query.id;
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {
@@ -658,6 +732,44 @@ function listarTipoUsuarios(pedido,respuesta) {
 
     var sql = 'select p.id,p.nombre,p.fecha_inicio,p.fecha_fin,p.director as idDirector,u.nombres as director,p.etapa as idEtapa, e.etapa  from tb_proyectos as p '+
     ' join tb_etapas as e on p.etapa=e.id join tb_usuarios as u on p.director=u.id where p.director='+id;
+
+
+    //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
+    conexion.query(sql, function (error, filas) {
+      console.log(filas);
+      if (error) {
+        console.log('error en el listado');
+        respuesta.write(null);
+        respuesta.end();
+        return;
+      }else{
+        var res='[';
+        if(filas.length > 0){
+          for(var i=0;i<filas.length;i++){
+            res+='{';
+            res+='"id":"'+filas[i].id+'",';
+            res+='"nombre":"'+filas[i].nombre+'",';
+            res+='"fecha_inicio":"'+filas[i].fecha_inicio+'",';
+            res+='"fecha_fin":"'+filas[i].fecha_fin+'",';
+            res+='"idDirector":"'+filas[i].idDirector+'",';
+            res+='"director":"'+filas[i].director+'",';
+            res+='"idEtapa":"'+filas[i].idEtapa+'",';
+            res+='"etapa":"'+filas[i].etapa+'"},';
+
+          }
+          res=res.slice(0,-1);
+        }
+        res+=']';
+        console.log(res);
+        respuesta.write(res);
+        respuesta.end();
+      }
+    });
+  }
+  function listarProyectosPorId(pedido,respuesta) {
+
+    var sql = 'select p.id,p.nombre,p.fecha_inicio,p.fecha_fin,p.director as idDirector,u.nombres as director,p.etapa as idEtapa, e.etapa  from tb_proyectos as p '+
+    ' join tb_etapas as e on p.etapa=e.id join tb_usuarios as u on p.director=u.id where p.id='+pedido.query.id;
 
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
@@ -1298,6 +1410,9 @@ exports.editarCargo = editarCargo;
 exports.eliminarCargo = eliminarCargo;
 exports.listarCargos=listarCargos;
 exports.listarProyectos=listarProyectos;
+exports.listarProyectosPorId=listarProyectosPorId;
+exports.listarTareasPorProyecto = listarTareasPorProyecto;
+exports.listarTareasPorActividad = listarTareasPorActividad;
 exports.listarIntegrantes=listarIntegrantes;
 exports.listarReuniones=listarReuniones;
 exports.buscarIntegrante=buscarIntegrante;

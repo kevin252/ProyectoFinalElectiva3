@@ -91,6 +91,38 @@ app.service('tareaService', function ($http, $httpParamSerializerJQLike) {
         return promise;
     };
 
+    this.listarTareasPorProyecto = function (id) {
+        var promise = $http({
+            method: "get",
+            url: "/listarTareasPorProyecto",
+            params: {
+                id: id
+            }
+        }).then(function mySucces(response) {
+            return response.data;
+        }, function myError(response) {
+            alert("Error");
+            alert(response.statusText);
+        });
+        return promise;
+    };
+
+    this.listarTareasPorActividad = function (id) {
+        var promise = $http({
+            method: "get",
+            url: "/listarTareasPorActividad",
+            params: {
+                id: id
+            }
+        }).then(function mySucces(response) {
+            return response.data;
+        }, function myError(response) {
+            alert("Error");
+            alert(response.statusText);
+        });
+        return promise;
+    };
+
     this.eliminarTarea = function (tarea) {
         var promise = $http({
             method: "delete",
