@@ -25,12 +25,10 @@ app.controller('CtlRecurso', function ($scope, recursoService) {
                 if (response.exito) {
                     alert("Recurso creado con exito");
                     $scope.recurso = "";
-                    //$scope.listar();
-                } else {
+                    $scope.listar();
+                } else {                    
                     alert("No se pudo crear al recurso");
                     $scope.recurso = "";
-                    //$scope.listar();
-
                 }
             });
         } else {
@@ -59,7 +57,7 @@ app.controller('CtlRecurso', function ($scope, recursoService) {
 
     $scope.editarRecurso = function (form) {
         if (form) {
-            cervezaRecurso.editarRecurso($scope.recurso).then(function (response) {
+            recursoService.editarRecurso($scope.recurso).then(function (response) {
                 if (response.exito) {
                     $scope.recurso = "";
                     $scope.listar();
@@ -91,23 +89,24 @@ app.controller('CtlRecurso', function ($scope, recursoService) {
             if (response.length !== 0) {
                 $scope.recursos.length = 0;
                 for (var i = 0; i < response.length; i++) {
-                    $scope.recursos.push({nombre: response[i].nombre, descripcion:
-                                response[i].descripcion, porcentaje_alcohol: response[i].porcentaje_alcohol
+                    $scope.recursos.push({
+                        id: response[i].id,
+                        nombre: response[i].nombre,                        
+                        cantidad: Number(response[i].cantidad), 
+                        descripcion: response[i].descripcion, 
+                        ubicacion: response[i].ubicacion
                     });
                 }
             }
         });
     };
     $scope.llenarCampos = function (obj) {
-        obj.porcentaje_alcohol = parseInt(obj.porcentaje_alcohol);
-        $scope.cerveza = obj;
+        $scope.recurso = obj;
 
     };
 
     $scope.ordenarPor = function (tipo) {
         $scope.ordenarSeleccionado = tipo;
     };
-
-  //  $scope.listar();
 
 });

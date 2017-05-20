@@ -583,6 +583,38 @@ function listarTareasPorActividad(pedido,respuesta) {
     });
 }
 
+function listarRecursos(pedido,respuesta) {
+
+    var sql = 'SELECT id, nombre, cantidad, descripcion, ubicacion FROM tb_recursos';
+
+    //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
+    conexion.query(sql, function (error, filas) {
+        if (error) {
+            console.log('error en el listado');
+            respuesta.write(null);
+            respuesta.end();
+            return;
+        }else{
+          var res='[';
+          if(filas.length > 0){
+            for(var i=0;i<filas.length;i++){
+              res+='{';
+              res+='"id":"'+filas[i].id+'",';
+              res+='"nombre":"'+filas[i].nombre+'",';
+              res+='"cantidad":"'+filas[i].cantidad+'",';
+              res+='"descripcion":"'+filas[i].descripcion+'",';
+              res+='"ubicacion":"'+filas[i].ubicacion+'"},';
+            }
+            res=res.slice(0,-1);
+          }
+          res+=']';
+          console.log(res);
+          respuesta.write(res);
+          respuesta.end();
+        }
+    });
+}
+
 
 //Fin Crud Tareas
 //Crud cargos
@@ -937,6 +969,23 @@ function listarTipoUsuarios(pedido,respuesta) {
 
   }
 
+  function eliminarRecurso(pedido, respuesta) {
+    var sql = 'DELETE FROM tb_recursos WHERE id = ?';
+    conexion.query(sql, pedido.body.id, function (error, resultado) {
+      if (error) {
+        console.log("error");
+        console.log('error en la consulta');
+        respuesta.write('{"exito":false}');
+        respuesta.end();
+      }else{
+        respuesta.write('{"exito":true}');
+        respuesta.end();
+      }
+    });
+
+  }
+
+
   function asignarIntegrante(pedido, respuesta) {
     var registro = {
       integrante: pedido.body.integrante,
@@ -979,12 +1028,24 @@ function listarTipoUsuarios(pedido,respuesta) {
   }
 
   function editarReunion(pedido, respuesta) {
-    var registro = {
-      ubicacion: pedido.body.ubicacion,
-      tematica: pedido.body.tematica
-    }
     var sql = 'UPDATE tb_reuniones SET ubicacion = ?, tematica = ? WHERE id = ?';
     conexion.query(sql, [pedido.body.ubicacion, pedido.body.tematica, pedido.body.id], function (error, resultado) {
+      if (error) {
+        console.log("error");
+        console.log('error en la consulta');
+        respuesta.write('{"exito":false}');
+        respuesta.end();
+      }else{
+        respuesta.write('{"exito":true}');
+        respuesta.end();
+      }
+    });
+
+  }
+
+  function editarRecurso(pedido, respuesta) {
+    var sql = 'UPDATE tb_recursos SET nombre = ?, cantidad = ?, descripcion = ?, ubicacion = ? WHERE id = ?';
+    conexion.query(sql, [pedido.body.nombre, pedido.body.cantidad, pedido.body.descripcion, pedido.body.ubicacion, pedido.body.id], function (error, resultado) {
       if (error) {
         console.log("error");
         console.log('error en la consulta');
@@ -1395,11 +1456,13 @@ exports.conectardb = conectardb;
 exports.crearRecurso = crearRecurso;
 exports.crearProyecto = crearProyecto;
 exports.editarProyecto = editarProyecto;
+exports.editarRecurso = editarRecurso;
 exports.eliminarProyecto = eliminarProyecto;
 exports.crearActividad = crearActividad;
 exports.editarActividad = editarActividad;
 exports.eliminarActividad = eliminarActividad;
 exports.listarActividades = listarActividades;
+exports.listarRecursos = listarRecursos;
 exports.crearTarea = crearTarea;
 exports.editarTarea = editarTarea;
 exports.eliminarTarea = eliminarTarea;
@@ -1418,6 +1481,7 @@ exports.listarReuniones=listarReuniones;
 exports.buscarIntegrante=buscarIntegrante;
 exports.eliminarIntegrante=eliminarIntegrante;
 exports.eliminarReunion=eliminarReunion;
+exports.eliminarRecurso=eliminarRecurso;
 exports.crearReunion=crearReunion;
 exports.editarReunion=editarReunion;
 exports.asignarIntegrante=asignarIntegrante;

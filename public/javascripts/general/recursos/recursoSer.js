@@ -7,12 +7,12 @@
 
 
 
-/* global app */
+ /* global app */
 
 
-/*************servicio vs factory vs provider***************/
+ /*************servicio vs factory vs provider***************/
 /*Todas son SINGLETON (Unicamente puede ser instanciada una vez en el contexto
- * en el cual se encuentre)*/
+* en el cual se encuentre)*/
 
 
 /*Se define el servicio (app.service(nombre servicio, funcionalidad))*/
@@ -21,7 +21,7 @@
  * datos diferente a como se hacia en jquery  y muchos webservices no encuentran
  * los datos que les llega, por lo que se hace necesario serializarlos como
  * jquery para que lleguen al servidor*/
-app.service('recursoService', function ($http, $httpParamSerializerJQLike) {
+ app.service('recursoService', function ($http, $httpParamSerializerJQLike) {
     this.crearRecurso = function (recurso) {
         var promise = $http({
             method: "POST",
@@ -41,15 +41,16 @@ app.service('recursoService', function ($http, $httpParamSerializerJQLike) {
         return promise;
     };
 
-    this.editarCerveza = function (recurso) {
+    this.editarRecurso = function (recurso) {
         var promise = $http({
             method: "post",
             url: "/editarRecurso",
             data: $httpParamSerializerJQLike({
-              nombre: recurso.nombre,
-              cantidad: recurso.cantidad,
-              descripcion:recurso.descripcion,
-              ubicacion: recurso.ubicacion}),
+                id: recurso.id,
+                nombre: recurso.nombre,
+                cantidad: recurso.cantidad,
+                descripcion:recurso.descripcion,
+                ubicacion: recurso.ubicacion}),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
             return response.data;
@@ -73,12 +74,13 @@ app.service('recursoService', function ($http, $httpParamSerializerJQLike) {
         return promise;
     };
 
-    this.eliminarcerveza = function (recurso) {
+    this.eliminarRecurso = function (recurso) {
         var promise = $http({
             method: "delete",
             url: "/eliminarRecurso",
             data: $httpParamSerializerJQLike({
-                id: recurso.id}),
+                id: recurso.id
+            }),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
             return response.data;

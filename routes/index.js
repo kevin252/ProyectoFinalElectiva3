@@ -21,6 +21,17 @@ router.get('/tarea', function(req, res, next) {
   }
 });
 
+router.get('/recursos', function(req, res, next) {
+  if(req.session.correo){
+    res.render('recursos', { title: 'recursos',layout: "masterPage"});
+  }else{
+    var pagina='<!doctype html><html><head></head><body>'+
+    '<p>No tiene permitido ingresar sin login</p>'+
+    '<br><a href="/">Retornar</a></body></html>';
+    res.send(pagina);
+  }
+});
+
 router.get('/inicio', function(req, res, next) {
   if(req.session.correo){
     res.render('inicio', { title: 'Inicio',layout: "masterPage"});
@@ -174,7 +185,9 @@ router.get('/listarTipoDocumentos', function(req, res, next) {
 router.get('/listarActividadesPorId', function(req, res, next) {
   dao.listarActividadesPorId(req,res);
 });
-
+router.get('/listarRecursos', function(req, res, next) {
+  dao.listarRecursos(req,res);
+});
 router.get('/buscarIntegrante', function(req, res, next) {
   dao.buscarIntegrante(req,res);
 });
@@ -214,6 +227,12 @@ router.post('/crearReunion', function(req, res, next) {
     //req.session.mail=req.body.mail;
   });
 
+router.post('/crearRecurso', function(req, res, next) {
+  /*Se crea una variable de sesion llamada mail con el dato que llega*/
+  dao.crearRecurso(req,res);
+    //req.session.mail=req.body.mail;
+  });
+
 router.delete('/eliminarProyecto', function(req, res, next) {
 	/*Se crea una variable de sesion llamada mail con el dato que llega*/
   dao.eliminarProyecto(req,res);
@@ -237,6 +256,11 @@ router.delete('/eliminarReunion', function(req, res, next) {
     //req.session.mail=req.body.mail;
   });
 
+router.delete('/eliminarRecurso', function(req, res, next) {
+  /*Se crea una variable de sesion llamada mail con el dato que llega*/
+  dao.eliminarRecurso(req,res);
+    //req.session.mail=req.body.mail;
+  });
 
 router.post('/editarProyecto', function(req, res, next) {
 	/*Se crea una variable de sesion llamada mail con el dato que llega*/
@@ -259,6 +283,12 @@ router.post('/editarActividad', function(req, res, next) {
 router.post('/editarReunion', function(req, res, next) {
   /*Se crea una variable de sesion llamada mail con el dato que llega*/
   dao.editarReunion(req,res);
+    //req.session.mail=req.body.mail;
+  });
+
+router.post('/editarRecurso', function(req, res, next) {
+  /*Se crea una variable de sesion llamada mail con el dato que llega*/
+  dao.editarRecurso(req,res);
     //req.session.mail=req.body.mail;
   });
 
