@@ -76,6 +76,22 @@ app.service('proyectoService', function ($http, $httpParamSerializerJQLike) {
         return promise;
     };
 
+    this.listarProyectosIntegrante = function (id) {
+        var promise = $http({
+            method: "get",
+            url: "/listarProyectosIntegrante",
+            params: {
+                id: id
+            }
+        }).then(function mySucces(response) {
+            return response.data;
+        }, function myError(response) {
+            alert("Error");
+            alert(response.statusText);
+        });
+        return promise;
+    };
+
     this.listarProyectosPorId = function (id) {
         var promise = $http({
             method: "get",

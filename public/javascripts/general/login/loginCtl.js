@@ -23,13 +23,10 @@ app.controller('CtlLogin', function ($scope,$window, loginService) {
         if (form) {
             loginService.login($scope.login).then(function (response) {
                 if (response.length!==0) {
-                  alert(response[0].id);
                   if(response[0].tipo_usuario==="1"){
-                    alert("Integrante");
                     $window.location.href="/inicioIntegrante";
 
                   }else if(response[0].tipo_usuario==="2"){
-                    alert("directivo");
                     $window.location.href="/inicio";
 
                   }

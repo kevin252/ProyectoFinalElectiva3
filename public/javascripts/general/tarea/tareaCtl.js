@@ -17,7 +17,8 @@ app.controller('CtlTarea', function ($scope,proyectoService,actividadService, ta
     /*Se inicializa el modelo*/
     $scope.tarea = "";
     $scope.tareas = [];
-
+    $scope.porc=0;
+$scope.tareasPorId = [];
     /*Se define una funcion en el controlador*/
     $scope.crearTarea = function (form) {
         if (form) {
@@ -25,19 +26,29 @@ app.controller('CtlTarea', function ($scope,proyectoService,actividadService, ta
           var f = new Date($scope.tarea.fecha_fin);
           var a= new Date();
           if(i>=a&i<=f){
-            tareaService.crearTarea($scope.tarea).then(function (response) {
-                console.log(response);
-                if (response.exito) {
-                    alert("Tarea creada con exito");
-                    $scope.tarea = "";
-                    $scope.listar();
-                } else {
-                    alert("No se pudo crear la tarea");
-                    $scope.tarea = "";
-                    $scope.listar();
+            $scope.listarTareasPorActividad($scope.tarea.actividad);
+            $scope.validarPorcentajes();
 
-                }
-            });
+            if($scope.tarea.porcentaje<=100&&$scope.tarea.estado<=100){
+              tareaService.crearTarea($scope.tarea).then(function (response) {
+                  console.log(response);
+                  if (response.exito) {
+                      alert("Tarea creada con exito");
+                      $scope.tarea = "";
+                      $scope.listar();
+                  } else {
+                      alert("No se pudo crear la tarea");
+                      $scope.tarea = "";
+                      $scope.listar();
+
+                  }
+              });
+            }else{
+              alert("No se pudo registrar la tarea porque el porcentaje o el estado superaran el 100%");
+            }
+
+
+
           }else{
             alert("por favor ingrese un rango de fechas valido");
             $scope.listar();
@@ -73,6 +84,7 @@ app.controller('CtlTarea', function ($scope,proyectoService,actividadService, ta
           var f = new Date($scope.tarea.fecha_fin);
           var a= new Date();
           if(i>=a&i<=f){
+
             tareaService.editarTarea($scope.tarea).then(function (response) {
                 if (response.exito===true) {
                     $scope.tarea = "";
@@ -90,6 +102,7 @@ app.controller('CtlTarea', function ($scope,proyectoService,actividadService, ta
 
                 }
             });
+
           }else{
             alert("por favor ingrese un rango de fechas valido");
             $scope.listarProyectos();
@@ -128,12 +141,36 @@ app.controller('CtlTarea', function ($scope,proyectoService,actividadService, ta
                       porcentaje: response[i].porcentaje,fecha_inicio:
                       new Date(response[i].fecha_inicio), fecha_fin: new Date(response[i].fecha_fin),
                       estado: response[i].estado,actividad: response[i].actividad,
-                      idActividad: response[i].idActividad
+                      idActividad: response[i].idActividad,idProyecto: response[i].idProyecto,
+                      proyecto: response[i].proyecto
                     });
                 }
             }
         });
+        $scope.validarPorcentajes();
     };
+
+
+    $scope.listarTareasPorActividad = function (id) {
+        tareaService.listarTareasPorActividad(id).then(function (response) {
+            $scope.tareasPorId = [];
+            console.log(response[0]);
+            if (response.length !== 0) {
+                $scope.tareasPorId.length = 0;
+                for (var i = 0; i < response.length; i++) {
+                    $scope.tareasPorId.push({id: response[i].id,nombre: response[i].nombre,
+                      porcentaje: response[i].porcentaje,fecha_inicio:
+                      new Date(response[i].fecha_inicio), fecha_fin: new Date(response[i].fecha_fin),
+                      estado: response[i].estado,actividad: response[i].actividad,
+                      idActividad: response[i].idActividad,idProyecto: response[i].idProyecto
+                    });
+                }
+            }
+        });
+        $scope.validarPorcentajes();
+    };
+
+
     $scope.listarProyectos = function () {
         proyectoService.listarProyectos().then(function (response) {
             $scope.proyectos = [];
@@ -148,6 +185,13 @@ app.controller('CtlTarea', function ($scope,proyectoService,actividadService, ta
         });
     };
 
+    $scope.validarPorcentajes = function () {
+      for (var i = 0; i < $scope.tareasPorId.length; i++) {
+        $scope.porc+=$scope.tareasPorId[i].porcentaje;
+          };
+      }
+
+
 
 
 
@@ -157,6 +201,8 @@ app.controller('CtlTarea', function ($scope,proyectoService,actividadService, ta
       obj.porcentaje=parseInt(obj.porcentaje);
       obj.estado=parseInt(obj.estado);
         $scope.tarea = obj;
+        $scope.tarea.proyecto=obj.idProyecto;
+        $scope.listarActividades(obj.idProyecto);
         $scope.tarea.actividad=obj.idActividad;
 
 
