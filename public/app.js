@@ -6,4 +6,9 @@
 
 /*Se definen las depenciencias que seran utilizadas por el sistema, son varias
  * se separan asi: ['ngRoute', 'ngCookies', 'xxxxx']*/
-var app = angular.module("appMasterPage",[]);
+var app = angular.module("appMasterPage",['ngRoute']);
+
+app.config(function($interpolateProvider) {
+  $interpolateProvider.startSymbol('{[{');
+  $interpolateProvider.endSymbol('}]}');
+});

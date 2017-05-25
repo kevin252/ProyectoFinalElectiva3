@@ -9,7 +9,7 @@
 6 silly lifecycle masterpage@0.0.0~prestart: no script for prestart, continuing
 7 info lifecycle masterpage@0.0.0~start: masterpage@0.0.0
 8 verbose lifecycle masterpage@0.0.0~start: unsafe-perm in lifecycle true
-9 verbose lifecycle masterpage@0.0.0~start: PATH: C:\Program Files\nodejs\node_modules\npm\bin\node-gyp-bin;C:\Users\Heider\Documents\GitHub\ProyectoFinalElectiva3\node_modules\.bin;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\nodejs\;C:\Program Files (x86)\Skype\Phone\;C:\Program Files (x86)\GtkSharp\2.12\bin;C:\RailsInstaller\Git\cmd;C:\RailsInstaller\Ruby2.2.0\bin;C:\Ruby22\bin;C:\Users\Heider\AppData\Local\Microsoft\WindowsApps;C:\Users\Heider\AppData\Roaming\npm;
+9 verbose lifecycle masterpage@0.0.0~start: PATH: C:\Program Files\nodejs\node_modules\npm\bin\node-gyp-bin;C:\Users\Heider\Documents\GitHub\ProyectoFinalElectiva3\node_modules\.bin;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\nodejs\;C:\Program Files (x86)\Skype\Phone\;C:\Program Files (x86)\GtkSharp\2.12\bin;C:\QMSYS\bin;C:\RailsInstaller\Git\cmd;C:\RailsInstaller\Ruby2.2.0\bin;C:\Ruby22\bin;C:\Users\Heider\AppData\Local\Microsoft\WindowsApps;C:\Users\Heider\AppData\Roaming\npm;
 10 verbose lifecycle masterpage@0.0.0~start: CWD: C:\Users\Heider\Documents\GitHub\ProyectoFinalElectiva3
 11 silly lifecycle masterpage@0.0.0~start: Args: [ '/d /s /c', 'node ./bin/www' ]
 12 verbose stack Error: kill ENOSYS

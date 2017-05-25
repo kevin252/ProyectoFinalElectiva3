@@ -53,6 +53,18 @@ router.get('/proyecto', function(req, res, next) {
     res.send(pagina);
   }
 });
+
+router.get('/proyectosIntegrante', function(req, res, next) {
+  if(req.session.correo){
+    res.render('proyectosIntegrante', { title: 'proyectosIntegrante',layout: "masterPageIntegrante"});
+  }else{
+    var pagina='<!doctype html><html><head></head><body>'+
+    '<p>No tiene permitido ingresar sin login</p>'+
+    '<br><a href="/">Retornar</a></body></html>';
+    res.send(pagina);
+  }
+});
+
 router.get('/estado', function(req, res, next) {
   if(req.session.correo){
     res.render('estado', { title: 'estado',layout: "masterPage"});
@@ -78,6 +90,17 @@ router.get('/integrantes', function(req, res, next) {
 router.get('/reuniones', function(req, res, next) {
   if(req.session.correo){
     res.render('reuniones', { title: 'reuniones',layout: "masterPage"});
+  }else{
+    var pagina='<!doctype html><html><head></head><body>'+
+    '<p>No tiene permitido ingresar sin login</p>'+
+    '<br><a href="/">Retornar</a></body></html>';
+    res.send(pagina);
+  }
+});
+
+router.get('/reunionesIntegrante', function(req, res, next) {
+  if(req.session.correo){
+    res.render('reunionesIntegrante', { title: 'reunionesIntegrante',layout: "masterPageIntegrante"});
   }else{
     var pagina='<!doctype html><html><head></head><body>'+
     '<p>No tiene permitido ingresar sin login</p>'+

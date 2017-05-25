@@ -1,0 +1,88 @@
+
+
+<script src="javascripts/general/proyecto/proyectoCtl.js" type="text/javascript"></script>
+<script src="javascripts/general/proyecto/proyectoSer.js" type="text/javascript"></script>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-login">
+        <div class="panel-heading">
+
+          <h1>Proyectos</h1>
+
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-lg-12">
+              <form id="proyecto-form" role="form" name="formProyecto"
+              ng-controller="CtlProyecto" ng-init="listarProyectosIntegrante();">
+              <div class="panel-body">
+                <div class="panel panel-primary" style="width: 1100px;">
+                  <div class="panel-heading">
+                    <div class="input-group">
+                      <span class="input-group-addon">
+                        <i class="glyphicon glyphicon-search"></i>
+                      </span>
+                      <input type="text" class="form-control"
+                      placeholder="Buscar proyecto" ng-model="txtBuscar">
+                    </div>
+                  </div>
+                  <div class="panel-body">
+                   <table class="table table-striped">
+                     <thead>
+                       <tr>
+                         <th>
+                           <a ng-click="ordenarPor('id')">Id</a>
+                           <a class="caret" ng-click="ordenarPor('-id')"></a>
+                         </th>
+                         <th>
+                           <a ng-click="ordenarPor('nombre')">Nombre</a>
+                           <a class="caret" ng-click="ordenarPor('-nombre')"></a>
+                         </th>
+                         <th>
+                           <a ng-click="ordenarPor('fecha_inicio')">Fecha Inicio</a>
+                           <a class="caret" ng-click="ordenarPor('-fecha_inicio')"></a>
+                         </th>
+                         <th>
+                           <a ng-click="ordenarPor('fecha_fin')">Fecha fin</a>
+                           <a class="caret" ng-click="ordenarPor('-fecha_fin')"></a>
+                         </th>
+                         <th>
+                           <a ng-click="ordenarPor('director')">Director</a>
+                           <a class="caret" ng-click="ordenarPor('-director')"></a>
+                         </th>
+                         <th>
+                           <a ng-click="ordenarPor('etapa')">Etapa</a>
+                           <a class="caret" ng-click="ordenarPor('-etapa')"></a>
+                         </th>
+                         <th>
+                           <a>Opcion</a>
+                         </th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       <tr ng-repeat="obj in proyectos| orderBy:ordenarSeleccionado
+                       | filter:txtBuscar" ng-click="llenarCampos(obj)">
+                       <td ng-bind="obj.id"></td>
+                       <td ng-bind="obj.nombre"></td>
+                       <td ng-bind="obj.fecha_inicio | date:'shortDate'"></td>
+                       <td ng-bind="obj.fecha_fin | date:'shortDate'"></td>
+                       <td ng-bind="obj.director"></td>
+                       <td ng-bind="obj.etapa"></td>
+
+                       <td><a href="/reunionesIntegrante?proyecto={[{obj.id}]}" class="btn btn-default">Ver Reuniones</a>
+                       <input type="button" class="btn btn-default" value="Ver Actividades"
+                        ng-click="verActividades(obj)"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>                      
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

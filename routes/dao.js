@@ -849,8 +849,8 @@ function listarTipoUsuarios(pedido,respuesta) {
 
   function listarProyectosIntegrante(pedido,respuesta) {
 
-    var sql = 'select p.id,p.nombre,p.fecha_inicio,p.fecha_fin,p.director as idDirector,u.nombres as director,p.etapa as idEtapa, e.etapa  from tb_proyectos as p  join tb_integrantes_proyectos tp on tp.proyecto=p.id join tb_usuarios as u on tp.integrante=u.id join  tb_etapas as e on p.etapa=e.id  where u.id='+id;
-
+    var sql = 'select p.id,p.nombre,p.fecha_inicio,p.fecha_fin,p.director as idDirector,d.nombres as director,p.etapa as idEtapa, e.etapa  from tb_proyectos as p  join tb_integrantes_proyectos tp on tp.proyecto=p.id join tb_usuarios as u on tp.integrante=u.id join tb_usuarios d on p.director=d.id join tb_etapas as e on p.etapa=e.id  where u.id='+id;
+    console.log(sql);
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {

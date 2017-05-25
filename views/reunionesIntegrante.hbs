@@ -1,0 +1,63 @@
+<script src="javascripts/general/reunion/reunionCtl.js" type="text/javascript"></script>
+<script src="javascripts/general/reunion/reunionSer.js" type="text/javascript"></script>
+<script src="javascripts/general/proyecto/proyectoSer.js" type="text/javascript"></script>
+<div class="container">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-login">
+				<div class="panel-heading">
+					<h1>Reuniones del Proyecto</h1>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-lg-12">
+							<form id="reunion-form" role="form" name="formReunion"
+							ng-controller="CtlReunion" ng-init="listarReunionesIntegrante();">
+							
+							<div class="panel panel-primary" style="width: 1100px;">
+								<div class="panel-heading">
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-search"></i>
+										</span>
+										<input type="text" class="form-control"
+										placeholder="Buscar Reunion" ng-model="txtBuscar">
+									</div>
+								</div>
+								<div class="panel-body">
+									<table class="table table-striped">
+										<thead>
+											<tr>
+												<th>
+													<a ng-click="ordenarPor('ubicacion')">Ubicación</a>
+													<a class="caret" ng-click="ordenarPor('-ubicacion')"></a>
+												</th>
+												<th>
+													<a ng-click="ordenarPor('tematica')">Temática</a>
+													<a class="caret" ng-click="ordenarPor('-tematica')"></a>
+												</th>
+												<th>
+													<a>Opcion</a>
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="obj in reuniones| orderBy:ordenarSeleccionado
+											| filter:txtBuscar" ng-click="llenarCampos(obj)">
+											<td ng-bind="obj.ubicacion"></td>
+											<td ng-bind="obj.tematica"></td>
+											<td><input type="button" class="btn btn-default" value="Eliminar"
+												ng-click="eliminarReunion(obj)"></td>
+											</tr>
+										</tbody>
+									</table>									
+								</div>
+							</div>		
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>

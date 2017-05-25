@@ -12,7 +12,7 @@
 /*app.controller(nombre de la funcion)  ($scope, nombre de los servicios a utilizar)*/
 /*$windows servicio por defecto para poder utilizar refresco de pagina y redireccionamiento*/
 /*logInService, nombre del servicio que contiene la promesa. */
-app.controller('CtlReunion', function ($scope, reunionService, proyectoService) {
+app.controller('CtlReunion', function ($scope, $location, reunionService, proyectoService) {
 
     /*Se inicializa el modelo*/
     $scope.reunion = {};
@@ -33,6 +33,28 @@ app.controller('CtlReunion', function ($scope, reunionService, proyectoService) 
                     	id: response[i].id,
                     	ubicacion: response[i].ubicacion,
                     	tematica: response[i].tematica
+                    });
+                }
+            }
+        });
+    };
+
+    $scope.listarReunionesIntegrante = function () {           
+        var proyecto = $location.absUrl().split("?");
+        proyecto = proyecto[1].split("=");
+        reunionService.listarReuniones(proyecto[1]).then(function (response) {
+            var proyecto = $scope.reunion.proyecto;
+            $scope.reunion = {};
+            $scope.reunion.proyecto = proyecto;
+            $scope.reuniones = [];
+            console.log(response[0]);
+            if (response.length !== 0) {
+                $scope.reuniones.length = 0;
+                for (var i = 0; i < response.length; i++) {
+                    $scope.reuniones.push({
+                        id: response[i].id,
+                        ubicacion: response[i].ubicacion,
+                        tematica: response[i].tematica
                     });
                 }
             }

@@ -120,6 +120,23 @@ app.controller('CtlProyecto', function ($scope, proyectoService) {
         });
     };
 
+    $scope.listarProyectosIntegrante = function () {
+        proyectoService.listarProyectosIntegrante().then(function (response) {
+            $scope.proyectos = [];
+            console.log(response[0]);
+            if (response.length !== 0) {
+                $scope.proyectos.length = 0;
+                for (var i = 0; i < response.length; i++) {
+                    $scope.proyectos.push({id: response[i].id,nombre: response[i].nombre, fecha_inicio:
+                                new Date(response[i].fecha_inicio), fecha_fin: new Date(response[i].fecha_fin),
+                                director: response[i].director,idDirector: response[i].idDirector,
+                                etapa: response[i].etapa,idEtapa: response[i].idEtapa
+                    });
+                }
+            }
+        });
+    };
+
     $scope.listarDirectores = function () {
         proyectoService.listarDirectores().then(function (response) {
             $scope.directores = [];
