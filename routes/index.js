@@ -325,6 +325,16 @@ router.post('/editarCargo', function(req, res, next) {
   dao.editarCargo(req,res);
     //req.session.mail=req.body.mail;
   });
+  router.post('/comentar', function(req, res, next) {
+  	/*Se crea una variable de sesion llamada mail con el dato que llega*/
+    dao.comentar(req,res);
+      //req.session.mail=req.body.mail;
+    });
+    router.post('/editarPorcentaje', function(req, res, next) {
+    	/*Se crea una variable de sesion llamada mail con el dato que llega*/
+      dao.editarPorcentaje(req,res);
+        //req.session.mail=req.body.mail;
+      });
 
 router.post('/asignarIntegrante', function(req, res, next) {
   /*Se crea una variable de sesion llamada mail con el dato que llega*/

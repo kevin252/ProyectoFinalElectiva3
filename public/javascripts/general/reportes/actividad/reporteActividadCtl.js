@@ -12,43 +12,76 @@
 /*app.controller(nombre de la funcion)  ($scope, nombre de los servicios a utilizar)*/
 /*$windows servicio por defecto para poder utilizar refresco de pagina y redireccionamiento*/
 /*logInService, nombre del servicio que contiene la promesa. */
-app.controller('CtlReporteActividades', function ($scope,proyectoService, actividadService,tareaService) {
+app.controller('CtlReporteActividades', function ($scope,proyectoService, actividadService,tareaService,reporteActividadService) {
 
     /*Se inicializa el modelo*/
     $scope.actividad = "";
     $scope.actividades = [];
     $scope.proyectos=[];
     $scope.tareas=[];
+    $scope.tarea="";
+    $scope.porc=true;
 
 
     /*Se define una funcion en el controlador*/
 
 
 
-    $scope.editarTarea = function (form) {
+    $scope.editarPorcentaje = function (form) {
         if (form) {
 
-            actividadService.editarTarea($scope.proyecto).then(function (response) {
+          if(($scope.tarea.porcentaje>=0)&&($scope.tarea.porcentaje<=100)){
+            reporteActividadService.editarPorcentaje($scope.tarea).then(function (response) {
                 if (response.exito===true) {
-                    $scope.proyecto = "";
-                    $scope.listar();
+                    $scope.listarTareasPorActividad($scope.tarea.id);
+
                     alert("Se edito con exito");
+                    $scope.tarea.porcentaje=0;
                 } else if (response.exito === false) {
-                    $scope.proyecto = "";
+
                     alert("No se edito ninguna fila");
-                    $scope.listar();
+                    $scope.listarTareasPorActividad($scope.tarea.id);
 
                 } else {
-                    $scope.proyecto = "";
-                    alert("Error al tratar de editar la actividad");
-                    $scope.listar();
+
+                    alert("Error al tratar de editar la tarea");
+                    $scope.listarTareasPorActividad($scope.tarea.id);
+
+                }
+            });
+          }else{
+            alert("el valor del porcentaje debe estar en un rango de 0 a 100");
+            $scope.listarTareasPorActividad($scope.tarea.id);
+          }
+
+
+        } else {
+            alert("Por favor ingrese un porcentaje");
+            $scope.listarTareasPorActividad($scope.tarea.id);
+
+        }
+
+    };
+
+
+    $scope.comentar = function (form) {
+        if (form) {
+
+            reporteActividadService.comentar($scope.reporte).then(function (response) {
+                if (response.exito===true) {
+                    alert("Se edito con exito");
+                    $scope.reporte.comentario="";
+                } else if (response.exito === false) {
+                    alert("No se edito ninguna fila");
+
+                } else {
+                    alert("Error al tratar de comentar");
 
                 }
             });
 
         } else {
-            alert("Verifique los datos ingresados");
-            $scope.listar();
+            alert("Ingrese un comentario");
 
         }
 
@@ -84,6 +117,7 @@ app.controller('CtlReporteActividades', function ($scope,proyectoService, activi
                       idResponsable: response[i].idResponsable
                     });
                 }
+
             }
         });
     };
@@ -100,7 +134,8 @@ app.controller('CtlReporteActividades', function ($scope,proyectoService, activi
                       porcentaje: response[i].porcentaje,fecha_inicio:
                       new Date(response[i].fecha_inicio), fecha_fin: new Date(response[i].fecha_fin),
                       estado: response[i].estado,actividad: response[i].actividad,
-                      idActividad: response[i].idActividad,proyecto: response[i].proyecto
+                      idActividad: response[i].idActividad,proyecto: response[i].proyecto,
+                      idProyecto: response[i].idProyecto
                     });
                 }
             }
@@ -113,13 +148,16 @@ app.controller('CtlReporteActividades', function ($scope,proyectoService, activi
     $scope.llenarCampos = function (obj) {
       obj.fecha_inicio = new Date(obj.fecha_inicio);
       obj.fecha_fin = new Date(obj.fecha_fin);
-        $scope.actividad = obj;
-        $scope.actividad.proyecto=obj.idProyecto;
-        $scope.actividad.responsable=obj.idResponsable;
-
-
+      obj.porcentaje=parseInt(obj.porcentaje);
+      obj.estado=parseInt(obj.estado);
+      $scope.reporte.id=obj.id;
+        $scope.tarea = obj;
 
     };
+
+    $scope.editarTarea=function(){
+      console.log($scope.tarea);
+    }
 
     $scope.ordenarPor = function (tipo) {
         $scope.ordenarSeleccionado = tipo;

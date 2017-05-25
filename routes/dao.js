@@ -491,6 +491,56 @@ function editarTarea(pedido,respuesta) {
 
 }
 
+function editarPorcentaje(pedido,respuesta) {
+      var sql = "update tb_tareas set porcentaje="+pedido.body.porcentaje+" where id=?";
+      console.log(sql);
+      conexion.query(sql, pedido.body.id,function (error, resultado) {
+          if (error) {
+            console.log("error");
+              console.log('error en la consulta');
+              respuesta.write('{"exito":"error"}');
+              respuesta.end();
+          }else{
+            console.log(resultado.affectedRows);
+            if(resultado.affectedRows>0){
+
+              respuesta.write('{"exito":true}');
+              respuesta.end();
+            }else{
+              respuesta.write('{"exito":false}');
+              respuesta.end();
+            }
+
+          }
+        });
+
+}
+
+function comentar(pedido,respuesta) {
+      var sql = "update tb_actividades set comentario='"+pedido.body.comentario+"' where id=?";
+      console.log(sql);
+      conexion.query(sql, pedido.body.id,function (error, resultado) {
+          if (error) {
+            console.log("error");
+              console.log('error en la consulta');
+              respuesta.write('{"exito":"error"}');
+              respuesta.end();
+          }else{
+            console.log(resultado.affectedRows);
+            if(resultado.affectedRows>0){
+
+              respuesta.write('{"exito":true}');
+              respuesta.end();
+            }else{
+              respuesta.write('{"exito":false}');
+              respuesta.end();
+            }
+
+          }
+        });
+
+}
+
 function eliminarTarea(pedido, respuesta) {
 
         var id = pedido.body.id;
@@ -596,7 +646,7 @@ console.log(sql);
 
 function listarTareasPorActividad(pedido,respuesta) {
 
-    var sql = 'select t.id,t.nombre,t.porcentaje,t.fecha_inicio,t.fecha_fin,t.estado,a.nombre as actividad,a.id as idActividad,p.nombre as proyecto from tb_tareas as t join tb_actividades as a on t.actividad=a.id join tb_proyectos as p on a.proyecto=p.id where a.id='+pedido.query.id;
+    var sql = 'select t.id,t.nombre,t.porcentaje,t.fecha_inicio,t.fecha_fin,t.estado,a.nombre as actividad,a.id as idActividad,p.nombre as proyecto,p.id as idProyecto from tb_tareas as t join tb_actividades as a on t.actividad=a.id join tb_proyectos as p on a.proyecto=p.id where a.id='+pedido.query.id;
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {
@@ -613,6 +663,7 @@ function listarTareasPorActividad(pedido,respuesta) {
               res+='"id":"'+filas[i].id+'",';
               res+='"nombre":"'+filas[i].nombre+'",';
               res+='"proyecto":"'+filas[i].proyecto+'",';
+              res+='"idProyecto":"'+filas[i].idProyecto+'",';
               res+='"porcentaje":"'+filas[i].porcentaje+'",';
               res+='"fecha_inicio":"'+filas[i].fecha_inicio+'",';
               res+='"fecha_fin":"'+filas[i].fecha_fin+'",';
@@ -1578,6 +1629,8 @@ exports.listarEtapas=listarEtapas;
 exports.listarActividadesPorId=listarActividadesPorId;
 exports.listarActividadesPorRepresentante=listarActividadesPorRepresentante;
 exports.login=login;
+exports.comentar=comentar;
+exports.editarPorcentaje=editarPorcentaje;
 exports.registro=registro;
 exports.listarTipoDocumentos=listarTipoDocumentos;
 exports.listarTipoUsuarios=listarTipoUsuarios;
