@@ -1,5 +1,8 @@
 <script src="javascripts/general/recursos/recursoCtl.js" type="text/javascript"></script>
 <script src="javascripts/general/recursos/recursoSer.js" type="text/javascript"></script>
+<script src="javascripts/general/proyecto/proyectoSer.js" type="text/javascript"></script>
+<script src="javascripts/general/actividad/actividadSer.js" type="text/javascript"></script>
+<script src="javascripts/general/tarea/tareaSer.js" type="text/javascript"></script>
 <div class="container">
   <div class="row">
     <div class="col-md-6">
@@ -50,7 +53,7 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group" ng-show="recurso.id !== undefined">
+              <div class="form-group" ng-show="recurso.id">
                 <div class="row">
                   <div class="col-sm-6 col-sm-offset-3">
                     <input type="button" name="crear-submit"
@@ -105,18 +108,68 @@
                         <td ng-bind="obj.descripcion"></td>
                         <td ng-bind="obj.ubicacion"></td>
                         <td><input type="button" class="btn btn-default" value="Eliminar"
-                          ng-click="eliminarRecurso(obj)"></td>
-                        </tr>
-                      </tbody>
-                    </table>
+                          ng-click="eliminarRecurso(obj)">
+                          <input type="button" class="btn btn-default" value="Asignar"
+                          ng-click="aux.asignar = true;">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>    
+
+            <div id="asignamicionRecurso" ng-show="aux.asignar">
+              <div class="form-group">
+                <label for="selEtapa" class="col-lg-4 control">Proyecto</label>
+                <div class="form-group">
+                  <select class="form-control" id="selEtapa" ng-model="recurso.proyecto" ng-options="item.id as item.nombre for item in proyectos" ng-change="listarActividadesPorProyecto();" ng-init="listarProyectos();">
+                    <option value="" disabled selected>Seleccione una Opcion</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group" ng-show="recurso.proyecto">
+                <label for="selEtapa" class="col-lg-4 control">Actividad</label>
+                <div class="form-group">
+                  <select class="form-control" id="selEtapa" ng-model="recurso.actividad" ng-options="item.id as item.nombre for item in actividades" ng-change="listarTareasPorActividad();">
+                    <option value="" disabled selected>Seleccione una Opcion</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group" ng-show="recurso.actividad">
+                <label for="selEtapa" class="col-lg-4 control">Tarea</label>
+                <div class="form-group">
+                  <select class="form-control" id="selEtapa" ng-model="recurso.tarea" ng-options="item.id as item.nombre for item in tareas" ng-change="">
+                    <option value="" disabled selected>Seleccione una Opcion</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group" ng-show="recurso.tarea">                
+                <input type="text" name="ubicacion"
+                id="ubicacion" class="form-control"
+                placeholder="Cantidad"
+                ng-model="recurso.cantidadAux">
+              </div>
+
+              <div class="form-group" ng-show="recurso.tarea">
+                <div class="row">
+                  <div class="col-sm-6 col-sm-offset-3">
+                    <input type="button" name="crear-submit"
+                    id="crear-submit"
+                    class="form-control btn btn-login"
+                    value="Asignar" ng-click="asignarRecurso()">
                   </div>
                 </div>
-              </div>    
-            </form>
-          </div>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 </div>

@@ -134,6 +134,7 @@ app.controller('CtlTarea', function ($scope,proyectoService,actividadService, ta
             }
         });
     };
+    
     $scope.listarProyectos = function () {
         proyectoService.listarProyectos().then(function (response) {
             $scope.proyectos = [];

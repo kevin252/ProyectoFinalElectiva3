@@ -12,10 +12,11 @@
 /*app.controller(nombre de la funcion)  ($scope, nombre de los servicios a utilizar)*/
 /*$windows servicio por defecto para poder utilizar refresco de pagina y redireccionamiento*/
 /*logInService, nombre del servicio que contiene la promesa. */
-app.controller('CtlRecurso', function ($scope, recursoService) {
+app.controller('CtlRecurso', function ($scope, recursoService, proyectoService, actividadService, tareaService) {
 
     /*Se inicializa el modelo*/
     $scope.recurso = "";
+    $scope.aux = {};
 
     /*Se define una funcion en el controlador*/
     $scope.crearRecurso = function (form) {
@@ -100,6 +101,55 @@ app.controller('CtlRecurso', function ($scope, recursoService) {
             }
         });
     };
+
+    $scope.listarProyectos = function () {
+        proyectoService.listarProyectos().then(function (response) {
+            $scope.proyectos = [];
+            console.log(response[0]);
+            if (response.length !== 0) {
+                $scope.proyectos.length = 0;
+                for (var i = 0; i < response.length; i++) {
+                    $scope.proyectos.push({
+                        id: response[i].id,
+                        nombre: response[i].nombre
+                    });
+                }
+            }
+        });
+    };
+
+    $scope.listarActividadesPorProyecto = function () {
+        actividadService.listarActividadesPorId($scope.recurso.proyecto).then(function (response) {
+            $scope.actividades = [];
+            console.log(response[0]);
+            if (response.length !== 0) {
+                $scope.actividades.length = 0;
+                for (var i = 0; i < response.length; i++) {
+                    $scope.actividades.push({
+                        id: response[i].id,
+                        nombre: response[i].nombre
+                    });
+                }
+            }
+        });
+    };
+
+    $scope.listarTareasPorActividad = function () {
+        tareaService.listarTareasPorActividad($scope.recurso.actividad).then(function (response) {
+            $scope.tareas = [];
+            console.log(response[0]);
+            if (response.length !== 0) {
+                $scope.tareas.length = 0;
+                for (var i = 0; i < response.length; i++) {
+                    $scope.tareas.push({
+                        id: response[i].id,
+                        nombre: response[i].nombre
+                    });
+                }
+            }
+        });
+    };
+
     $scope.llenarCampos = function (obj) {
         $scope.recurso = obj;
 

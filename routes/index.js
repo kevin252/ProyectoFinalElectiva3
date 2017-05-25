@@ -316,6 +316,12 @@ router.post('/asignarIntegrante', function(req, res, next) {
     //req.session.mail=req.body.mail;
   });
 
+router.post('/asignarRecurso', function(req, res, next) {
+  /*Se crea una variable de sesion llamada mail con el dato que llega*/
+  dao.asignarRecurso(req,res);
+    //req.session.mail=req.body.mail;
+  });
+
 router.delete('/eliminarIntegrante', function(req, res, next) {
   /*Se crea una variable de sesion llamada mail con el dato que llega*/
   dao.eliminarIntegrante(req,res);
