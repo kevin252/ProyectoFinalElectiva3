@@ -21,14 +21,55 @@
  * datos diferente a como se hacia en jquery  y muchos webservices no encuentran
  * los datos que les llega, por lo que se hace necesario serializarlos como
  * jquery para que lleguen al servidor*/
-app.service('loginService', function ($http, $httpParamSerializerJQLike) {
-    this.login = function (login) {
+app.service('reporteActividadService', function ($http, $httpParamSerializerJQLike) {
+
+
+
+    this.listarProyectosIntegrante = function () {
         var promise = $http({
-            method: "POST",
-            url: "/login",
+            method: "get",
+            url: "/listarProyectosIntegrante"
+        }).then(function mySucces(response) {
+            return response.data;
+        }, function myError(response) {
+            alert("Error");
+            alert(response.statusText);
+        });
+        return promise;
+    };
+
+    this.listarDirectores = function () {
+        var promise = $http({
+            method: "get",
+            url: "/listarDirectores"
+        }).then(function mySucces(response) {
+            return response.data;
+        }, function myError(response) {
+            alert("Error");
+            alert(response.statusText);
+        });
+        return promise;
+    };
+
+    this.listarEtapas = function () {
+        var promise = $http({
+            method: "get",
+            url: "/listarEtapas"
+        }).then(function mySucces(response) {
+            return response.data;
+        }, function myError(response) {
+            alert("Error");
+            alert(response.statusText);
+        });
+        return promise;
+    };
+
+    this.eliminarProyecto = function (proyecto) {
+        var promise = $http({
+            method: "delete",
+            url: "/eliminarProyecto",
             data: $httpParamSerializerJQLike({
-                mail: login.mail,
-                clave:login.clave}),
+                id: proyecto.id}),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
             return response.data;
@@ -38,39 +79,4 @@ app.service('loginService', function ($http, $httpParamSerializerJQLike) {
         });
         return promise;
     };
-
-    // this.redireccionar = function (pagina) {
-    //     var promise = $http({
-    //         method: "GE",
-    //         url: "/inicio"
-    //     }).then(function mySucces(response) {
-    //         return response.data;
-    //     }, function myError(response) {
-    //         alert("Error");
-    //         alert(response.statusText);
-    //     });
-    //     return promise;
-    // };
-
-
-    this.logOut = function () {
-        var promise = $http({
-            method: "GET",
-            url: "/logout"
-        }).then(function mySucces(response) {
-            return response.data;
-        }, function myError(response) {
-            alert("Error");
-            alert(response.statusText);
-        });
-        return promise;
-    };
-
-
-
-
-
-
-
-
 });

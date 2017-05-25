@@ -96,6 +96,16 @@ router.get('/actividad', function(req, res, next) {
     res.send(pagina);
   }
 });
+router.get('/actividadesIntegrante', function(req, res, next) {
+  if(req.session.correo){
+    res.render('actividadesIntegrante', { title: 'proyecto',layout: "masterPageIntegrante"});
+  }else{
+    var pagina='<!doctype html><html><head></head><body>'+
+    '<p>No tiene permitido ingresar sin login</p>'+
+    '<br><a href="/">Retornar</a></body></html>';
+    res.send(pagina);
+  }
+});
 
 router.get('/cargo', function(req, res, next) {
   if(req.session.correo){
@@ -146,6 +156,9 @@ router.get('/listarTipoUsuarios', function(req, res, next) {
 router.get('/listarActividades', function(req, res, next) {
   dao.listarActividades(req,res);
 });
+router.get('/listarActividadesPorRepresentante', function(req, res, next) {
+  dao.listarActividadesPorRepresentante(req,res);
+});
 router.get('/listarResponsables', function(req, res, next) {
   dao.listarResponsables(req,res);
 });
@@ -166,6 +179,9 @@ router.get('/listarTareasPorActividad', function(req, res, next) {
 });
 router.get('/listarProyectos', function(req, res, next) {
   dao.listarProyectos(req,res);
+});
+router.get('/listarProyectosIntegrante', function(req, res, next) {
+  dao.listarProyectosIntegrante(req,res);
 });
 router.get('/listarProyectosPorId', function(req, res, next) {
   dao.listarProyectosPorId(req,res);

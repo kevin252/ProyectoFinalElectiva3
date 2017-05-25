@@ -123,6 +123,22 @@ app.service('tareaService', function ($http, $httpParamSerializerJQLike) {
         return promise;
     };
 
+    this.listarProyectosPorId = function (id) {
+        var promise = $http({
+            method: "get",
+            url: "/listarProyectosPorId",
+            params: {
+                id: id
+            }
+        }).then(function mySucces(response) {
+            return response.data;
+        }, function myError(response) {
+            alert("Error");
+            alert(response.statusText);
+        });
+        return promise;
+    };
+
     this.eliminarTarea = function (tarea) {
         var promise = $http({
             method: "delete",

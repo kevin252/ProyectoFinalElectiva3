@@ -324,6 +324,50 @@ function listarActividades(pedido,respuesta) {
         }
     });
 }
+
+function listarActividadesPorRepresentante(pedido,respuesta) {
+
+    var sql = 'select a.id,a.nombre,a.descripcion,a.comentario,a.fecha_inicio,a.fecha_fin,a.proyecto as idProyecto,p.nombre as proyecto,u.id as idResponsable,u.nombres as responsable from tb_actividades as a join tb_proyectos as p on a.proyecto=p.id join tb_usuarios as u on a.responsable=u.id where a.responsable='+id+' AND p.id='+pedido.query.id;
+console.log(sql);
+    //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
+    conexion.query(sql, function (error, filas) {
+        if (error) {
+            console.log('error en el listado');
+            respuesta.write(null);
+            respuesta.end();
+            return;
+        }else{
+          var res='[';
+          if(filas.length > 0){
+            for(var i=0;i<filas.length;i++){
+              res+='{';
+              res+='"id":"'+filas[i].id+'",';
+              res+='"nombre":"'+filas[i].nombre+'",';
+              res+='"descripcion":"'+filas[i].descripcion+'",';
+              res+='"comentario":"'+filas[i].comentario+'",';
+              res+='"fecha_inicio":"'+filas[i].fecha_inicio+'",';
+              res+='"fecha_fin":"'+filas[i].fecha_fin+'",';
+              res+='"idResponsable":"'+filas[i].idResponsable+'",';
+              res+='"responsable":"'+filas[i].responsable+'",';
+              res+='"idProyecto":"'+filas[i].idProyecto+'",';
+              res+='"proyecto":"'+filas[i].proyecto+'"},';
+
+            }
+            res=res.slice(0,-1);
+          }
+          res+=']';
+          console.log(res);
+          respuesta.write(res);
+          respuesta.end();
+        }
+    });
+}
+
+
+
+
+
+
 function listarActividadesPorId(pedido,respuesta) {
 console.log(pedido.query.id);
     var sql = 'select a.id,a.nombre,a.descripcion,a.comentario,a.fecha_inicio,a.fecha_fin,a.proyecto as idProyecto,p.nombre as proyecto,u.id as idResponsable,u.nombres as responsable from tb_actividades as a join tb_proyectos as p on a.proyecto=p.id join tb_usuarios as u on a.responsable=u.id where p.director='+id+' AND p.id='+pedido.query.id;
@@ -475,7 +519,7 @@ function eliminarTarea(pedido, respuesta) {
 
 function listarTareas(pedido,respuesta) {
 
-    var sql = 'select t.id,t.nombre,t.porcentaje,t.fecha_inicio,t.fecha_fin,t.estado,a.nombre as actividad,a.id as idActividad,p.id as idProyecto from tb_tareas as t join tb_actividades as a on t.actividad=a.id join tb_proyectos as p on a.proyecto=p.id where p.director='+id;
+    var sql = 'select t.id,t.nombre,t.porcentaje,t.fecha_inicio,t.fecha_fin,t.estado,a.nombre as actividad,a.id as idActividad,p.id as idProyecto, p.nombre as proyecto from tb_tareas as t join tb_actividades as a on t.actividad=a.id join tb_proyectos as p on a.proyecto=p.id where p.director='+id;
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {
@@ -497,6 +541,7 @@ function listarTareas(pedido,respuesta) {
               res+='"idActividad":"'+filas[i].idActividad+'",';
               res+='"actividad":"'+filas[i].actividad+'",';
               res+='"idProyecto":"'+filas[i].idProyecto+'",';
+              res+='"proyecto":"'+filas[i].proyecto+'",';
 
               res+='"estado":"'+filas[i].estado+'"},';
 
@@ -513,8 +558,8 @@ function listarTareas(pedido,respuesta) {
 
 function listarTareasPorProyecto(pedido,respuesta) {
 
-    var sql = 'select t.id,t.nombre,t.porcentaje,t.fecha_inicio,t.fecha_fin,t.estado,a.nombre as actividad,a.id as idActividad from tb_tareas as t join tb_actividades as a on t.actividad=a.id join tb_proyectos as p on a.proyecto=p.id where p.id='+pedido.query.id;
-
+    var sql = 'select t.id,e.etapa,t.nombre,t.porcentaje,u.nombres as director,t.fecha_inicio,t.fecha_fin,t.estado,a.nombre as actividad,a.id as idActividad from tb_tareas as t join tb_actividades as a on t.actividad=a.id join tb_proyectos as p on a.proyecto=p.id join tb_usuarios as u on u.id=p.director join tb_etapas as e on p.etapa=e.id where p.id='+pedido.query.id;
+console.log(sql);
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {
         if (error) {
@@ -529,6 +574,8 @@ function listarTareasPorProyecto(pedido,respuesta) {
               res+='{';
               res+='"id":"'+filas[i].id+'",';
               res+='"nombre":"'+filas[i].nombre+'",';
+              res+='"etapa":"'+filas[i].etapa+'",';
+              res+='"director":"'+filas[i].director+'",';
               res+='"porcentaje":"'+filas[i].porcentaje+'",';
               res+='"fecha_inicio":"'+filas[i].fecha_inicio+'",';
               res+='"fecha_fin":"'+filas[i].fecha_fin+'",';
@@ -549,7 +596,7 @@ function listarTareasPorProyecto(pedido,respuesta) {
 
 function listarTareasPorActividad(pedido,respuesta) {
 
-    var sql = 'select t.id,t.nombre,t.porcentaje,t.fecha_inicio,t.fecha_fin,t.estado,a.nombre as actividad,a.id as idActividad from tb_tareas as t join tb_actividades as a on t.actividad=a.id join tb_proyectos as p on a.proyecto=p.id where a.id='+pedido.query.id;
+    var sql = 'select t.id,t.nombre,t.porcentaje,t.fecha_inicio,t.fecha_fin,t.estado,a.nombre as actividad,a.id as idActividad,p.nombre as proyecto from tb_tareas as t join tb_actividades as a on t.actividad=a.id join tb_proyectos as p on a.proyecto=p.id where a.id='+pedido.query.id;
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
     conexion.query(sql, function (error, filas) {
@@ -565,6 +612,7 @@ function listarTareasPorActividad(pedido,respuesta) {
               res+='{';
               res+='"id":"'+filas[i].id+'",';
               res+='"nombre":"'+filas[i].nombre+'",';
+              res+='"proyecto":"'+filas[i].proyecto+'",';
               res+='"porcentaje":"'+filas[i].porcentaje+'",';
               res+='"fecha_inicio":"'+filas[i].fecha_inicio+'",';
               res+='"fecha_fin":"'+filas[i].fecha_fin+'",';
@@ -798,10 +846,49 @@ function listarTipoUsuarios(pedido,respuesta) {
       }
     });
   }
+
+  function listarProyectosIntegrante(pedido,respuesta) {
+
+    var sql = 'select p.id,p.nombre,p.fecha_inicio,p.fecha_fin,p.director as idDirector,u.nombres as director,p.etapa as idEtapa, e.etapa  from tb_proyectos as p  join tb_integrantes_proyectos tp on tp.proyecto=p.id join tb_usuarios as u on tp.integrante=u.id join  tb_etapas as e on p.etapa=e.id  where u.id='+id;
+
+
+    //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
+    conexion.query(sql, function (error, filas) {
+      console.log(filas);
+      if (error) {
+        console.log('error en el listado');
+        respuesta.write(null);
+        respuesta.end();
+        return;
+      }else{
+        var res='[';
+        if(filas.length > 0){
+          for(var i=0;i<filas.length;i++){
+            res+='{';
+            res+='"id":"'+filas[i].id+'",';
+            res+='"nombre":"'+filas[i].nombre+'",';
+            res+='"fecha_inicio":"'+filas[i].fecha_inicio+'",';
+            res+='"fecha_fin":"'+filas[i].fecha_fin+'",';
+            res+='"idDirector":"'+filas[i].idDirector+'",';
+            res+='"director":"'+filas[i].director+'",';
+            res+='"idEtapa":"'+filas[i].idEtapa+'",';
+            res+='"etapa":"'+filas[i].etapa+'"},';
+
+          }
+          res=res.slice(0,-1);
+        }
+        res+=']';
+        console.log(res);
+        respuesta.write(res);
+        respuesta.end();
+      }
+    });
+  }
+
   function listarProyectosPorId(pedido,respuesta) {
 
     var sql = 'select p.id,p.nombre,p.fecha_inicio,p.fecha_fin,p.director as idDirector,u.nombres as director,p.etapa as idEtapa, e.etapa  from tb_proyectos as p '+
-    ' join tb_etapas as e on p.etapa=e.id join tb_usuarios as u on p.director=u.id where p.id='+pedido.query.id;
+    ' join tb_etapas as e on p.etapa=e.id join tb_usuarios as u on p.director=u.id  where p.id='+pedido.query.id;
 
 
     //Se realiza la consulta, recibiendo por parametro filas los registros de la base de datos.
@@ -1473,6 +1560,7 @@ exports.editarCargo = editarCargo;
 exports.eliminarCargo = eliminarCargo;
 exports.listarCargos=listarCargos;
 exports.listarProyectos=listarProyectos;
+exports.listarProyectosIntegrante=listarProyectosIntegrante;
 exports.listarProyectosPorId=listarProyectosPorId;
 exports.listarTareasPorProyecto = listarTareasPorProyecto;
 exports.listarTareasPorActividad = listarTareasPorActividad;
@@ -1488,6 +1576,7 @@ exports.asignarIntegrante=asignarIntegrante;
 exports.listarDirectores=listarDirectores;
 exports.listarEtapas=listarEtapas;
 exports.listarActividadesPorId=listarActividadesPorId;
+exports.listarActividadesPorRepresentante=listarActividadesPorRepresentante;
 exports.login=login;
 exports.registro=registro;
 exports.listarTipoDocumentos=listarTipoDocumentos;
