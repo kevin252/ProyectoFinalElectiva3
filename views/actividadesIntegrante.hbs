@@ -21,8 +21,12 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <form id="tarea-form" role="form" name="formReporteActividad"
-                                  ng-controller="CtlReporteActividades" style="display: block;">
-
+                                  ng-controller="CtlReporteActividades" style="display: block;" novalidate>
+                                  <div class="form-group">
+                                      <input type="text" name="id"
+                                             id="id" class="form-control"
+                                             ng-model="tarea.id" style="display:none">
+                                  </div>
 
                                 <div class="form-group">
                                   <label for="selProyecto" class="col-lg-2 control">Proyecto</label>
@@ -43,13 +47,36 @@
                                 </div>
 
 
-                                <div class="form-group">
+                                  <div class="form-group" ng-show="reporte.actividad !== undefined">
+                                    <label >Comentario</label>
+
+                                <textarea  class="form-control" name="comentario" ng-model="reporte.comentario" rows="5" cols="50"  required></textarea>
+                              </div>
+
+
+                              <div class="form-group" ng-if="tarea.id !==undefined">
+                                <label >Porcentaje</label>
+                                  <input type="number" name="porcentaje"
+                                         id="nombre" class="form-control"
+                                         ng-model="tarea.porcentaje" required>
+                              </div>
+                                <div class="form-group" ng-show="reporte.actividad !== undefined">
                                     <div class="row">
                                         <div class="col-sm-6 col-sm-offset-3">
                                             <input type="button" name="crear-submit"
                                                    id="crear-submit"
                                                    class="form-control btn btn-login"
-                                                   value="Editar" ng-click="editarTarea(formReporteActividad.$valid)">
+                                                   value="Comentar" ng-click="comentar(formReporteActividad.comentario.$valid)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-if="tarea.id !==undefined">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-sm-offset-3">
+                                            <input type="button" name="crear-submit"
+                                                   id="crear-submit"
+                                                   class="form-control btn btn-login"
+                                                   value="Editar Porcentaje" ng-click="editarPorcentaje(formReporteActividad.porcentaje.$valid)">
                                         </div>
                                     </div>
                                 </div>
@@ -91,9 +118,7 @@
                                                    <a ng-click="ordenarPor('proyecto')">Proyecto</a>
                                                    <a class="caret" ng-click="ordenarPor('-proyecto')"></a>
                                                </th>
-                                               <th>
-                                                   <a>Opcion</a>
-                                               </th>
+
                                            </tr>
                                        </thead>
                                        <tbody>
@@ -107,8 +132,7 @@
                                                <td ng-bind="obj.estado"></td>
                                                <td ng-bind="obj.actividad"></td>
                                                <td ng-bind="obj.proyecto"></td>
-                                               <td><input type="button" class="btn btn-default" value="Editar"
-                                                          ng-click="showModal()"></td>
+                                               
                                            </tr>
                                        </tbody>
                                    </table>

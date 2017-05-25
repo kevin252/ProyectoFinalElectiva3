@@ -25,58 +25,40 @@ app.service('reporteActividadService', function ($http, $httpParamSerializerJQLi
 
 
 
-    this.listarProyectosIntegrante = function () {
-        var promise = $http({
-            method: "get",
-            url: "/listarProyectosIntegrante"
-        }).then(function mySucces(response) {
-            return response.data;
-        }, function myError(response) {
-            alert("Error");
-            alert(response.statusText);
-        });
-        return promise;
-    };
 
-    this.listarDirectores = function () {
-        var promise = $http({
-            method: "get",
-            url: "/listarDirectores"
-        }).then(function mySucces(response) {
-            return response.data;
-        }, function myError(response) {
-            alert("Error");
-            alert(response.statusText);
-        });
-        return promise;
-    };
+  this.editarPorcentaje = function (tarea) {
+      var promise = $http({
+          method: "post",
+          url: "/editarPorcentaje",
+          data: $httpParamSerializerJQLike({
+              id: tarea.id,
+              porcentaje: tarea.porcentaje}),
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      }).then(function mySucces(response) {
+          return response.data;
+      }, function myError(response) {
+          alert("Error");
+          alert(response.statusText);
+      });
+      return promise;
+  };
 
-    this.listarEtapas = function () {
-        var promise = $http({
-            method: "get",
-            url: "/listarEtapas"
-        }).then(function mySucces(response) {
-            return response.data;
-        }, function myError(response) {
-            alert("Error");
-            alert(response.statusText);
-        });
-        return promise;
-    };
+  this.comentar = function (actividad) {
+      var promise = $http({
+          method: "post",
+          url: "/comentar",
+          data: $httpParamSerializerJQLike({
+              id: actividad.actividad,
+              comentario: actividad.comentario}),
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      }).then(function mySucces(response) {
+          return response.data;
+      }, function myError(response) {
+          alert("Error");
+          alert(response.statusText);
+      });
+      return promise;
+  };
 
-    this.eliminarProyecto = function (proyecto) {
-        var promise = $http({
-            method: "delete",
-            url: "/eliminarProyecto",
-            data: $httpParamSerializerJQLike({
-                id: proyecto.id}),
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).then(function mySucces(response) {
-            return response.data;
-        }, function myError(response) {
-            alert("Error");
-            alert(response.statusText);
-        });
-        return promise;
-    };
+
 });
