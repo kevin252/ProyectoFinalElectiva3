@@ -20,6 +20,16 @@ router.get('/tarea', function(req, res, next) {
     res.send(pagina);
   }
 });
+router.get('/estadoIntegrante', function(req, res, next) {
+  if(req.session.correo){
+    res.render('estadoIntegrante', { title: 'estadoIntegrante',layout: "masterPageIntegrante"});
+  }else{
+    var pagina='<!doctype html><html><head></head><body>'+
+    '<p>No tiene permitido ingresar sin login</p>'+
+    '<br><a href="/">Retornar</a></body></html>';
+    res.send(pagina);
+  }
+});
 
 router.get('/recursos', function(req, res, next) {
   if(req.session.correo){
